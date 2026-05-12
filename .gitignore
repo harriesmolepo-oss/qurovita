@@ -1,0 +1,10 @@
+node_modules/
+.keys/
+.env
+.env.local
+*.log
+dist/
+.turbo/
+.next/
+.expo/
+coverage/

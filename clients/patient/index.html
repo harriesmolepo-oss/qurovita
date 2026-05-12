@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QuroVita — Patient</title>
+  <script src="/shared/qrcode.min.js"></script>
+  <style>
+    :root { --bg:#0b1320; --card:#121b2e; --text:#e6edf7; --muted:#94a3b8; --accent:#3aa3ff; --warn:#f59e0b; --err:#ef4444; --ok:#22c55e; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); margin:0; padding:0; }
+    .wrap { max-width: 540px; margin: 0 auto; padding: 24px; }
+    header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+    h1 { font-size: 20px; margin: 0; letter-spacing:-0.01em; }
+    .pill { font-size: 11px; padding: 4px 8px; border-radius: 999px; background: #1f2a44; color: var(--muted); }
+    .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #1f2a44; }
+    .muted { color: var(--muted); font-size: 13px; }
+    button { background: var(--accent); color:#001428; border:none; padding: 12px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 15px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary { background:#1f2a44; color: var(--text); }
+    .row { display:flex; gap:12px; align-items:center; flex-wrap: wrap; }
+    .stack > * + * { margin-top: 10px; }
+    .qrbox { display:flex; flex-direction: column; align-items:center; gap: 12px; padding: 16px; background: white; border-radius: 10px; }
+    canvas { max-width: 100%; }
+    code, .mono { font-family: ui-monospace, SF Mono, Menlo, monospace; font-size: 12px; background: #0a1224; padding: 2px 6px; border-radius: 4px; color: var(--muted); }
+    .log { font-family: ui-monospace, monospace; font-size: 12px; max-height: 240px; overflow:auto; background:#0a1224; padding:12px; border-radius:8px; line-height:1.5; }
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .err { color: var(--err); }
+    .timer { font-size: 24px; font-weight: 700; color: var(--accent); }
+    .timer.warn { color: var(--warn); } .timer.err { color: var(--err); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>QuroVita — Patient</h1>
+    <span class="pill">v0 demo</span>
+  </header>
+
+  <div class="card">
+    <p class="muted" style="margin:0 0 12px">You are <strong>Demo Patient</strong> · Khayelitsha · HIV (on ART), Hypertension</p>
+    <p class="muted" style="margin:0">Bundle to share: 9 FHIR resources (Patient, 2 Conditions, 2 MedicationStatements, 3 Observations, 1 AllergyIntolerance)</p>
+  </div>
+
+  <div class="card stack" id="step1">
+    <div class="row" style="justify-content:space-between">
+      <strong>Step 1 — Generate share QR</strong>
+      <span class="muted">60-second session</span>
+    </div>
+    <p class="muted">Tap the button. A QR appears for the provider to scan. The QR holds only a session initiator — the actual record bundle never touches the QR.</p>
+    <button id="genBtn">Generate Share QR</button>
+  </div>
+
+  <div class="card stack" id="step2" style="display:none">
+    <div class="row" style="justify-content:space-between">
+      <strong>Step 2 — Show provider the QR</strong>
+      <span class="timer" id="timer">60s</span>
+    </div>
+    <div class="qrbox">
+      <canvas id="qrcanvas"></canvas>
+      <div class="row" style="width:100%;gap:6px">
+        <input id="sidShow" type="text" readonly
+               style="flex:1;font-family:ui-monospace,monospace;font-size:12px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;color:#0f172a;padding:6px 8px;min-width:0" />
+        <button class="secondary" id="copyBtn" style="padding:6px 12px;font-size:13px;white-space:nowrap">Copy</button>
+      </div>
+    </div>
+    <p class="muted">Provider can scan the QR <em>or</em> paste the session ID above into the provider portal.</p>
+    <div class="row">
+      <button class="secondary" id="revokeBtn">Revoke</button>
+    </div>
+  </div>
+
+  <div class="card stack">
+    <strong>Activity</strong>
+    <div class="log" id="log"></div>
+  </div>
+</div>
+
+<script type="module">
+import { generateEcdhKeypair, deriveSharedKey, encryptBundle, hex, unhex } from "/shared/crypto.js";
+
+const $ = id => document.getElementById(id);
+const log = (msg, cls="") => {
+  const line = document.createElement("div");
+  if (cls) line.className = cls;
+  line.textContent = `${new Date().toLocaleTimeString()}  ${msg}`;
+  $("log").prepend(line);
+};
+
+let state = null;       // { sessionId, priv, pubCompressed, serverPub, wsUrl, ws, sharedKey, expiresAt }
+let timerInterval = null;
+
+$("genBtn").onclick = async () => {
+  $("genBtn").disabled = true;
+  try {
+    // 1. Generate patient ECDH keypair locally
+    const { priv, pubCompressed } = generateEcdhKeypair();
+    log(`Generated ECDH P-256 keypair (pub: ${hex(pubCompressed).slice(0,16)}…)`);
+
+    // 2. POST to /qr-sessions
+    const resp = await fetch("/qr-sessions", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ patient_pub_compressed_hex: hex(pubCompressed) }),
+    });
+    if (!resp.ok) throw new Error(`backend ${resp.status}`);
+    const session = await resp.json();
+    log(`Backend issued session ${session.session_id.slice(0,8)}… (expires ${new Date(session.expires_at).toLocaleTimeString()})`);
+
+    // 3. Render QR — the QR contains the CBOR payload with server ECDH pubkey + ECDSA sig
+    const qrCanvas = $("qrcanvas");
+    const qrBytes = unhex(session.qr_bytes_hex);
+    // Encode QR bytes as base64 for QR text — keeps it under 2900 chars
+    const qrText = btoa(String.fromCharCode(...qrBytes));
+    await QRCode.toCanvas(qrCanvas, qrText, { width: 320, errorCorrectionLevel: "M" });
+    $("step2").style.display = "block";
+    $("sidShow").value = session.session_id;
+    log(`QR rendered (payload ${qrBytes.length} bytes — well under 3KB Version 40 cap)`, "ok");
+
+    // 4. Derive shared AES-256 key now (server pubkey came back in the response)
+    const serverPub = unhex(session.server_pub_compressed_hex);
+    const sharedKey = deriveSharedKey(priv, serverPub, session.session_id);
+    log(`Derived AES-256 session key via ECDH + HKDF-SHA256`);
+
+    // 5. Connect to WebSocket — wait for the provider to join, then send the encrypted bundle
+    const ws = new WebSocket(session.websocket_url + "?role=patient");
+    ws.binaryType = "arraybuffer";
+    ws.onopen = () => log("WebSocket open — waiting for provider…");
+    ws.onmessage = async (ev) => {
+      // Provider sends a "ready" handshake with their compressed pubkey (so patient
+      // can re-derive a key against the provider's ephemeral key instead of the
+      // server's). The demo uses the server-anchored key for simplicity, but the
+      // ready message gates the bundle send.
+      let msg = null;
+      try { msg = JSON.parse(typeof ev.data === "string" ? ev.data : new TextDecoder().decode(ev.data)); }
+      catch { /* binary */ }
+      if (!msg) return;
+
+      if (msg.type === "joined" && msg.peers >= 2) {
+        log(`Provider joined session — preparing bundle…`, "ok");
+      }
+      if (msg.type === "ready") {
+        log(`Provider is ready — encrypting bundle…`);
+        // Fetch the patient's FHIR bundle (in real app, built locally from WatermelonDB)
+        const bundle = await (await fetch("/sample-bundle")).json();
+        const plaintext = new TextEncoder().encode(JSON.stringify(bundle));
+        const aad = new TextEncoder().encode(session.session_id);
+        const wire = await encryptBundle(plaintext, sharedKey, aad);
+        log(`Encrypted bundle: ${plaintext.length} bytes plaintext → ${wire.length} bytes ciphertext (AES-256-GCM)`);
+        ws.send(wire.buffer);
+        ws.send(JSON.stringify({ type: "bundle_transferred", bytes: wire.length }));
+        log(`Bundle transmitted to provider over WebSocket transport`, "ok");
+      }
+      if (msg.type === "error") log(`error: ${msg.error}`, "err");
+    };
+    ws.onclose = () => log("WebSocket closed");
+    ws.onerror = () => log("WebSocket error", "err");
+
+    state = { ...session, priv, pubCompressed, sharedKey, ws, expiresAt: new Date(session.expires_at).getTime() };
+
+    // 6. Countdown
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      const remaining = Math.max(0, Math.floor((state.expiresAt - Date.now()) / 1000));
+      const t = $("timer");
+      t.textContent = `${remaining}s`;
+      t.className = "timer" + (remaining < 10 ? " err" : remaining < 30 ? " warn" : "");
+      if (remaining === 0) {
+        clearInterval(timerInterval);
+        log("Session expired", "warn");
+        try { state.ws.close(); } catch {}
+        $("step2").style.display = "none";
+        $("genBtn").disabled = false;
+      }
+    }, 250);
+
+  } catch (e) {
+    log(`failed: ${e.message}`, "err");
+    $("genBtn").disabled = false;
+  }
+};
+
+$("copyBtn").onclick = () => {
+  navigator.clipboard.writeText(state?.session_id ?? "");
+  log("Session ID copied");
+};
+
+$("revokeBtn").onclick = async () => {
+  if (!state) return;
+  await fetch(`/qr-sessions/${state.session_id}/revoke`, { method: "POST" });
+  log("Session revoked", "warn");
+  try { state.ws.close(); } catch {}
+  $("step2").style.display = "none";
+  $("genBtn").disabled = false;
+  if (timerInterval) clearInterval(timerInterval);
+};
+</script>
+</body>
+</html>
