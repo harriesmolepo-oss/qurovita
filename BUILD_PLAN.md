@@ -12,7 +12,7 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 
 ## Phase 0 — Repo foundation
 
-- [ ] **T0.1** Initialise monorepo with pnpm workspaces + Turborepo. Create `pnpm-workspace.yaml`, `turbo.json`, root `package.json` with `pnpm` 9. Set up `apps/*` and `packages/*` workspace globs.
+- [x] **T0.1** Initialise monorepo with pnpm workspaces + Turborepo. Create `pnpm-workspace.yaml`, `turbo.json`, root `package.json` with `pnpm` 9. Set up `apps/*` and `packages/*` workspace globs.
 - [ ] **T0.2** Move the v0 backend at `./backend/` into `apps/backend/`. Update import paths. Confirm `pnpm --filter backend dev` boots the server and the v0 patient↔provider WebSocket flow still works end-to-end.
 - [ ] **T0.3** Move the v0 clients at `./clients/patient/` and `./clients/provider/` into `apps/provider-portal/` (as Next.js 14 App Router pages) — keep `apps/provider-portal/app/page.tsx` (placeholder), `apps/provider-portal/app/session/page.tsx` (the provider flow). Keep the patient client as `apps/backend/public/patient/` for now — it'll be replaced by RN in Phase 4.
 - [ ] **T0.4** Extract `apps/backend/src/crypto/qr-session.ts` into `packages/crypto/` as a workspace package. Both the backend and the provider portal import from `@qurovita/crypto`. Configure tsconfig path aliases.
