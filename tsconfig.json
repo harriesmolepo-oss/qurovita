@@ -1,0 +1,12 @@
+{
+  // Root TypeScript config. Used by IDE and `tsc --build` to process all
+  // workspace packages in dependency order.
+  // Each package's own `typecheck` script runs `tsc --noEmit` independently
+  // via `pnpm typecheck` (Turborepo orchestrates the order).
+  "files": [],
+  "references": [
+    { "path": "./packages/crypto" },
+    { "path": "./apps/backend" },
+    { "path": "./apps/provider-portal" }
+  ]
+}
