@@ -6,12 +6,12 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const root = join(__dirname, "..", "..");
+const root = join(__dirname, "..", "..", "..");   // apps/backend/scripts -> monorepo root
 const vendorDir = join(root, "clients", "shared", "vendor");
 
 // qrcode as an IIFE — exposes the global `QRCode` used by patient/index.html
 await esbuild.build({
-  entryPoints: [join(__dirname, "../node_modules/qrcode/lib/browser.js")],
+  entryPoints: [join(__dirname, "..", "node_modules", "qrcode", "lib", "browser.js")],
   bundle: true,
   format: "iife",
   globalName: "QRCode",

@@ -24,19 +24,19 @@ await app.register(wsRoutes);
 // the bundle locally from its offline store.
 app.get("/sample-bundle", async () => sampleBundle("11111111-1111-1111-1111-111111111111"));
 
-// Serve the two clients
+// Serve the two clients (clients/ is at monorepo root, 3 levels above apps/backend/src/)
 await app.register(fastifyStatic, {
-  root: join(__dirname, "..", "..", "clients", "patient"),
+  root: join(__dirname, "..", "..", "..", "clients", "patient"),
   prefix: "/patient/",
   decorateReply: false,
 });
 await app.register(fastifyStatic, {
-  root: join(__dirname, "..", "..", "clients", "provider"),
+  root: join(__dirname, "..", "..", "..", "clients", "provider"),
   prefix: "/provider/",
   decorateReply: false,
 });
 await app.register(fastifyStatic, {
-  root: join(__dirname, "..", "..", "clients", "shared"),
+  root: join(__dirname, "..", "..", "..", "clients", "shared"),
   prefix: "/shared/",
   decorateReply: false,
 });
