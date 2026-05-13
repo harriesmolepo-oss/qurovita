@@ -13,67 +13,44 @@
 // ECDH key in the QR is used for ECDSA-bound key establishment in the prod
 // path; in this demo we forward the patient's ephemeral pubkey directly so
 // the provider can derive the same key the patient used.
+//
+// @fastify/websocket v10 API: handler receives (socket, req) where socket IS
+// the raw WebSocket — not a SocketStream wrapper. Use socket.send() directly.
+//
+// IMPORTANT: register socket.on("message") and socket.on("close") before
+// any await to avoid losing messages that arrive during async DB work.
 
 import type { FastifyInstance } from "fastify";
+import type { WebSocket } from "ws";
 import { pool } from "../db.js";
 import { auditLog } from "../services/audit.js";
 
 type Role = "patient" | "provider";
 
 interface Peer {
-  socket: any; // fastify-websocket SocketStream
+  socket: WebSocket;
   role: Role;
 }
 
 const rooms = new Map<string, Peer[]>();
 
 export async function wsRoutes(app: FastifyInstance) {
-  app.get("/ws/:sessionId", { websocket: true }, async (conn, req) => {
+  app.get("/ws/:sessionId", { websocket: true }, (socket: WebSocket, req) => {
     const sessionId = (req.params as any).sessionId as string;
     const role = ((req.query as any).role as Role) ?? "patient";
 
-    // Validate session exists and is pending
-    const r = await pool.query(
-      `select id, status, expires_at from qr_sessions where id = $1`,
-      [sessionId],
-    );
-    if (r.rowCount === 0) {
-      conn.socket.send(JSON.stringify({ type: "error", error: "session not found" }));
-      conn.socket.close();
-      return;
-    }
-    const session = r.rows[0];
-    if (session.status !== "pending") {
-      conn.socket.send(JSON.stringify({ type: "error", error: `session ${session.status}` }));
-      conn.socket.close();
-      return;
-    }
-    if (new Date(session.expires_at).getTime() < Date.now()) {
-      await pool.query(`update qr_sessions set status='expired' where id=$1`, [sessionId]);
-      conn.socket.send(JSON.stringify({ type: "error", error: "session expired" }));
-      conn.socket.close();
-      return;
-    }
-
-    const room = rooms.get(sessionId) ?? [];
-    room.push({ socket: conn.socket, role });
-    rooms.set(sessionId, room);
-
-    conn.socket.send(JSON.stringify({ type: "joined", role, peers: room.length }));
-    await auditLog({
-      actor_kind: role, action: "ws.join", target_type: "QrSession", target_id: sessionId,
-    });
-
-    conn.socket.on("message", async (raw: Buffer) => {
+    // Register message + close handlers immediately (before any await) so
+    // we never miss a message that arrives during async DB operations.
+    socket.on("message", async (raw: Buffer) => {
       const peers = rooms.get(sessionId) ?? [];
-      const others = peers.filter(p => p.socket !== conn.socket);
+      const others = peers.filter(p => p.socket !== socket);
 
       // Relay verbatim — server is a blind relay
       for (const p of others) {
         try { p.socket.send(raw); } catch { /* peer gone */ }
       }
 
-      // Best-effort message-type peek for audit + state transitions
+      // Best-effort peek for audit + state transitions
       try {
         const txt = raw.toString("utf8");
         if (txt.startsWith("{")) {
@@ -91,15 +68,49 @@ export async function wsRoutes(app: FastifyInstance) {
           }
         }
       } catch {
-        // binary payload (encrypted bundle bytes) — no peek
+        // binary payload — no peek needed
       }
     });
 
-    conn.socket.on("close", () => {
+    socket.on("close", () => {
       const peers = rooms.get(sessionId) ?? [];
-      const next = peers.filter(p => p.socket !== conn.socket);
+      const next = peers.filter(p => p.socket !== socket);
       if (next.length === 0) rooms.delete(sessionId);
       else rooms.set(sessionId, next);
     });
+
+    // Async setup: validate session, join room, send "joined"
+    void (async () => {
+      const r = await pool.query(
+        `select id, status, expires_at from qr_sessions where id = $1`,
+        [sessionId],
+      );
+      if (r.rowCount === 0) {
+        socket.send(JSON.stringify({ type: "error", error: "session not found" }));
+        socket.close();
+        return;
+      }
+      const session = r.rows[0];
+      if (session.status !== "pending") {
+        socket.send(JSON.stringify({ type: "error", error: `session ${session.status}` }));
+        socket.close();
+        return;
+      }
+      if (new Date(session.expires_at).getTime() < Date.now()) {
+        await pool.query(`update qr_sessions set status='expired' where id=$1`, [sessionId]);
+        socket.send(JSON.stringify({ type: "error", error: "session expired" }));
+        socket.close();
+        return;
+      }
+
+      const room = rooms.get(sessionId) ?? [];
+      room.push({ socket, role });
+      rooms.set(sessionId, room);
+
+      socket.send(JSON.stringify({ type: "joined", role, peers: room.length }));
+      await auditLog({
+        actor_kind: role, action: "ws.join", target_type: "QrSession", target_id: sessionId,
+      });
+    })();
   });
 }
