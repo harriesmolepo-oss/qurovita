@@ -1,6 +1,7 @@
 // backend/src/server.ts
 import "dotenv/config";
 import Fastify from "fastify";
+import fastifyCors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import fastifyWebsocket from "@fastify/websocket";
 import { join, dirname } from "node:path";
@@ -15,6 +16,12 @@ const PORT = Number(process.env.PORT ?? 3000);
 
 const app = Fastify({ logger: { level: "info" } });
 
+// Allow the Next.js provider portal dev server to call the API
+await app.register(fastifyCors, {
+  origin: [/localhost:\d+$/],
+  methods: ["GET", "POST", "OPTIONS"],
+});
+
 await app.register(fastifyWebsocket);
 await app.register(qrRoutes);
 await app.register(wsRoutes);
@@ -24,19 +31,14 @@ await app.register(wsRoutes);
 // the bundle locally from its offline store.
 app.get("/sample-bundle", async () => sampleBundle("11111111-1111-1111-1111-111111111111"));
 
-// Serve the two clients (clients/ is at monorepo root, 3 levels above apps/backend/src/)
+// Serve patient client and shared assets from public/ within this package
 await app.register(fastifyStatic, {
-  root: join(__dirname, "..", "..", "..", "clients", "patient"),
+  root: join(__dirname, "..", "public", "patient"),
   prefix: "/patient/",
   decorateReply: false,
 });
 await app.register(fastifyStatic, {
-  root: join(__dirname, "..", "..", "..", "clients", "provider"),
-  prefix: "/provider/",
-  decorateReply: false,
-});
-await app.register(fastifyStatic, {
-  root: join(__dirname, "..", "..", "..", "clients", "shared"),
+  root: join(__dirname, "..", "public", "shared"),
   prefix: "/shared/",
   decorateReply: false,
 });
@@ -49,7 +51,7 @@ app.get("/", async (_req, reply) => {
     <p>Open these in two browser tabs:</p>
     <ul>
       <li><a href="/patient/">Patient app</a></li>
-      <li><a href="/provider/">Provider portal</a></li>
+      <li><a href="http://localhost:3001/session">Provider portal</a> (Next.js — run separately)</li>
     </ul>
     <p>API health: <code>GET /healthz</code> · ECDSA pubkey: <code>GET /keys/ecdsa</code></p>
     </body></html>
