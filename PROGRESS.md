@@ -7,10 +7,10 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
-Starting T0.9
-2026-05-13  T0.8  .github/workflows/ci.yml — typecheck + lint + test on PR and main push  
-2026-05-13  T0.7  vitest 4-case crypto smoke test (round-trip, tamper, expired, size guard) all pass  
-2026-05-13  T0.6  ESLint 9 flat config + Prettier; shared @qurovita/config-eslint package; pnpm lint clean  
+2026-05-13  T0.9  PROGRESS.md complete; BUILD_PLAN T0.1–T0.9 all checked done  
+2026-05-13  T0.8  .github/workflows/ci.yml — typecheck + lint + test on PR and main push  3565855
+2026-05-13  T0.7  vitest 4-case crypto smoke test (round-trip, tamper, expired, size guard) all pass  2bcd7ea
+2026-05-13  T0.6  ESLint 9 flat config + Prettier; shared @qurovita/config-eslint package; pnpm lint clean  a45ad8c
 2026-05-13  T0.5  root tsconfig.json + per-package typecheck scripts; all 3 packages pass tsc --noEmit  a80a7a2
 2026-05-13  T0.4  packages/crypto extracted as @qurovita/crypto; backend + portal import from it  d5328d5
 2026-05-13  T0.3  provider-portal Next.js 14 scaffold; clients/ → apps/backend/public/; CORS  d1d63e5

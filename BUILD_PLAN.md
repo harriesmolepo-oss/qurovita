@@ -13,14 +13,14 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 ## Phase 0 — Repo foundation
 
 - [x] **T0.1** Initialise monorepo with pnpm workspaces + Turborepo. Create `pnpm-workspace.yaml`, `turbo.json`, root `package.json` with `pnpm` 9. Set up `apps/*` and `packages/*` workspace globs.
-- [ ] **T0.2** Move the v0 backend at `./backend/` into `apps/backend/`. Update import paths. Confirm `pnpm --filter backend dev` boots the server and the v0 patient↔provider WebSocket flow still works end-to-end.
-- [ ] **T0.3** Move the v0 clients at `./clients/patient/` and `./clients/provider/` into `apps/provider-portal/` (as Next.js 14 App Router pages) — keep `apps/provider-portal/app/page.tsx` (placeholder), `apps/provider-portal/app/session/page.tsx` (the provider flow). Keep the patient client as `apps/backend/public/patient/` for now — it'll be replaced by RN in Phase 4.
-- [ ] **T0.4** Extract `apps/backend/src/crypto/qr-session.ts` into `packages/crypto/` as a workspace package. Both the backend and the provider portal import from `@qurovita/crypto`. Configure tsconfig path aliases.
-- [ ] **T0.5** Add root TypeScript config with project references. `pnpm typecheck` runs across all packages.
-- [ ] **T0.6** Add ESLint + Prettier with shared config in `packages/config-eslint`. `pnpm lint` runs across all packages.
-- [ ] **T0.7** Add vitest for unit tests. Port the smoke test of the crypto module into proper `packages/crypto/test/qr-session.test.ts` with cases: round-trip success, tamper rejection, expired session rejection, QR payload size guard.
-- [ ] **T0.8** Add `.github/workflows/ci.yml` — runs `pnpm install`, `pnpm typecheck`, `pnpm lint`, `pnpm test` on PR and main push. Block merge on failure.
-- [ ] **T0.9** Add `PROGRESS.md` with a header and instructions. First entry is T0.1.
+- [x] **T0.2** Move the v0 backend at `./backend/` into `apps/backend/`. Update import paths. Confirm `pnpm --filter backend dev` boots the server and the v0 patient↔provider WebSocket flow still works end-to-end.
+- [x] **T0.3** Move the v0 clients at `./clients/patient/` and `./clients/provider/` into `apps/provider-portal/` (as Next.js 14 App Router pages) — keep `apps/provider-portal/app/page.tsx` (placeholder), `apps/provider-portal/app/session/page.tsx` (the provider flow). Keep the patient client as `apps/backend/public/patient/` for now — it'll be replaced by RN in Phase 4.
+- [x] **T0.4** Extract `apps/backend/src/crypto/qr-session.ts` into `packages/crypto/` as a workspace package. Both the backend and the provider portal import from `@qurovita/crypto`. Configure tsconfig path aliases.
+- [x] **T0.5** Add root TypeScript config with project references. `pnpm typecheck` runs across all packages.
+- [x] **T0.6** Add ESLint + Prettier with shared config in `packages/config-eslint`. `pnpm lint` runs across all packages.
+- [x] **T0.7** Add vitest for unit tests. Port the smoke test of the crypto module into proper `packages/crypto/test/qr-session.test.ts` with cases: round-trip success, tamper rejection, expired session rejection, QR payload size guard.
+- [x] **T0.8** Add `.github/workflows/ci.yml` — runs `pnpm install`, `pnpm typecheck`, `pnpm lint`, `pnpm test` on PR and main push. Block merge on failure.
+- [x] **T0.9** Add `PROGRESS.md` with a header and instructions. First entry is T0.1.
 
 ## Phase 1 — Backend hardening
 
