@@ -2,7 +2,7 @@
 import type { FastifyInstance } from "fastify";
 import { randomUUID } from "node:crypto";
 import { pool } from "../db.js";
-import { createSession, SESSION_TTL_SECONDS } from "../crypto/qr-session.js";
+import { createSession, SESSION_TTL_SECONDS } from "@qurovita/crypto";
 import { loadOrCreateSigningKey } from "../crypto/keys.js";
 import { auditLog } from "../services/audit.js";
 
