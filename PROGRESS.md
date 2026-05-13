@@ -7,7 +7,7 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
-2026-05-13  T0.9  PROGRESS.md complete; BUILD_PLAN T0.1–T0.9 all checked done  
+2026-05-13  T0.9  PROGRESS.md complete; BUILD_PLAN T0.1–T0.9 all checked done  e8dc5fb
 2026-05-13  T0.8  .github/workflows/ci.yml — typecheck + lint + test on PR and main push  3565855
 2026-05-13  T0.7  vitest 4-case crypto smoke test (round-trip, tamper, expired, size guard) all pass  2bcd7ea
 2026-05-13  T0.6  ESLint 9 flat config + Prettier; shared @qurovita/config-eslint package; pnpm lint clean  a45ad8c
