@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   generateEcdhKeypair, deriveSharedKey, decryptBundle, verifyQr,
-  hex, unhex, cborDecode,
+  hex, unhex,
 } from "@/lib/crypto";
 
 const API = "http://localhost:3000";

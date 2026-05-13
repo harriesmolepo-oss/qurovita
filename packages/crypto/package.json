@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
   },
   "exports": {
     ".": "./src/index.ts"
@@ -15,7 +16,10 @@
     "cbor-x": "^1.5.9"
   },
   "devDependencies": {
+    "@qurovita/config-eslint": "workspace:^",
     "@types/node": "^20.14.0",
+    "eslint": "^9.9.0",
+    "prettier": "^3.3.0",
     "typescript": "^5.5.0"
   }
 }

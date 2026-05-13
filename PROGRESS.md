@@ -7,7 +7,9 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
-Starting T0.5
+Starting T0.7
+2026-05-13  T0.6  ESLint 9 flat config + Prettier; shared @qurovita/config-eslint package; pnpm lint clean  
+2026-05-13  T0.5  root tsconfig.json + per-package typecheck scripts; all 3 packages pass tsc --noEmit  a80a7a2
 2026-05-13  T0.4  packages/crypto extracted as @qurovita/crypto; backend + portal import from it  d5328d5
 2026-05-13  T0.3  provider-portal Next.js 14 scaffold; clients/ → apps/backend/public/; CORS  d1d63e5
 2026-05-13  T0.2  move backend → apps/backend/, rename to @qurovita/backend, pin @noble/hashes@1.x  2623950
