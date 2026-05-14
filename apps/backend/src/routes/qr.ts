@@ -14,9 +14,7 @@ export async function qrRoutes(app: FastifyInstance) {
    * Body: { patient_pub_compressed_hex }
    * Response: { session_id, qr_bytes_hex, server_pub_compressed_hex, expires_at, websocket_url }
    */
-  app.post("/qr-sessions", {
-    config: { rateLimit: { max: 30, timeWindow: "1 minute" } },
-  }, async (req, reply) => {
+  app.post("/qr-sessions", async (req, reply) => {
     const userId = (req.user as { sub: string }).sub;
     const body = req.body as { patient_pub_compressed_hex?: string } | undefined;
     if (!body?.patient_pub_compressed_hex) {

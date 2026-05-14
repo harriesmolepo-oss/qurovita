@@ -17,5 +17,24 @@ services:
       timeout: 3s
       retries: 10
 
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: qurovita-pg-test
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: qurovita
+      POSTGRES_PASSWORD: qurovita_test
+      POSTGRES_DB: qurovita_test
+    ports:
+      - "5434:5432"
+    volumes:
+      - qurovita_pg_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qurovita -d qurovita_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
 volumes:
   qurovita_pg_data:
+  qurovita_pg_test_data:

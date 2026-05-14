@@ -7,7 +7,7 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
-Starting T1.9
+2026-05-14  T1.9  12 supertest integration tests for QR session endpoints (create/payload/revoke); rate-limit isolated to fresh app; @fastify/rate-limit downgraded to v8
 2026-05-13  T1.8  breach.ts: POPIA cross-user fhir_resources detection → breach_candidates + Sentry; daily BullMQ cron; 3-case vitest
 2026-05-13  T1.7  migrate.ts: _migrations tracking table; reruns skip already-applied files
 2026-05-13  T1.6  0002_phase1_schema.sql: fhir_resources, documents, consent_records, kyc_verifications, whatsapp_sessions, ai_compliance_log, breach_candidates; RLS on all
