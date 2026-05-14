@@ -32,7 +32,16 @@ export interface CreateSessionArgs {
   sessionId: string;
   patientPubCompressed: Uint8Array; // 33 bytes
   websocketUrl: string;
-  ecdsaSigningPrivKey: Uint8Array;  // 32 bytes
+  ecdsaSigningPrivKey: Uint8Array;  // 32 bytes — omit when using signerFn
+  ttlSeconds?: number;
+}
+
+export interface CreateSessionAsyncArgs {
+  sessionId: string;
+  patientPubCompressed: Uint8Array;
+  websocketUrl: string;
+  /** Async signer (e.g. KMS). Receives the raw CBOR message; returns 64-byte compact r||s. */
+  signerFn: (msg: Uint8Array) => Promise<Uint8Array>;
   ttlSeconds?: number;
 }
 
@@ -76,6 +85,27 @@ export function createSession(args: CreateSessionArgs): CreatedSession {
   const unsigned = { v: 1 as const, sid: args.sessionId, spk: serverPubCompressed, exp, url: args.websocketUrl };
   const msg = cborEncode(unsigned);
   const sig = p256.sign(sha256(msg), args.ecdsaSigningPrivKey).toCompactRawBytes();
+  const signed: QrPayload = { ...unsigned, sig };
+  const qrBytes = cborEncode(signed);
+
+  if (qrBytes.length > 2900) {
+    throw new Error(`QR payload ${qrBytes.length} bytes — exceeds Version 40 QR cap (2900 bytes)`);
+  }
+  return { qrBytes, serverEcdhPriv: serverPriv, serverEcdhPubCompressed: serverPubCompressed };
+}
+
+// ---------------------------------------------------------------------------
+// Async variant of createSession — used with KMS (private key stays in KMS).
+// ---------------------------------------------------------------------------
+export async function createSessionAsync(args: CreateSessionAsyncArgs): Promise<CreatedSession> {
+  const ttl = args.ttlSeconds ?? SESSION_TTL_SECONDS;
+  const serverPriv = p256.utils.randomPrivateKey();
+  const serverPubCompressed = p256.getPublicKey(serverPriv, true);
+
+  const exp = Math.floor(Date.now() / 1000) + ttl;
+  const unsigned = { v: 1 as const, sid: args.sessionId, spk: serverPubCompressed, exp, url: args.websocketUrl };
+  const msg = cborEncode(unsigned);
+  const sig = new Uint8Array(await args.signerFn(msg));
   const signed: QrPayload = { ...unsigned, sig };
   const qrBytes = cborEncode(signed);
 

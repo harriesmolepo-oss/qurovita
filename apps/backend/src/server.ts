@@ -8,7 +8,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { qrRoutes } from "./routes/qr.js";
 import { wsRoutes } from "./routes/ws.js";
-import { loadOrCreateSigningKey } from "./crypto/keys.js";
+import { getSigningState } from "./kms.js";
 import { sampleBundle } from "./services/sample-fhir.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -60,8 +60,8 @@ app.get("/", async (_req, reply) => {
 
 app.get("/healthz", async () => ({ ok: true, ts: Date.now() }));
 
-// Warm up the signing key so any error surfaces at startup
-loadOrCreateSigningKey();
+// Warm up signing state so any KMS or file-key error surfaces at startup
+void getSigningState();
 
 app.listen({ port: PORT, host: "0.0.0.0" }).then(() => {
   console.log(`\n  QuroVita demo listening on http://localhost:${PORT}`);

@@ -2,26 +2,26 @@
 import type { FastifyInstance } from "fastify";
 import { randomUUID } from "node:crypto";
 import { pool } from "../db.js";
-import { createSession, SESSION_TTL_SECONDS } from "@qurovita/crypto";
-import { loadOrCreateSigningKey } from "../crypto/keys.js";
+import { createSessionAsync, SESSION_TTL_SECONDS } from "@qurovita/crypto";
+import { getSigningState } from "../kms.js";
 import { auditLog } from "../services/audit.js";
 
 const DEMO_USER_ID = "11111111-1111-1111-1111-111111111111";
 
-// In-memory store of session-scoped ECDH privkeys + derived keys.
-// In production the privkey lives KMS-wrapped in qr_sessions.server_ecdh_privkey_encrypted
-// and the shared key is derived on-demand. For the demo we keep it simple.
+// In-memory store of session-scoped ECDH privkeys.
+// T1.2 will replace this with KMS-wrapped storage in qr_sessions.server_ecdh_privkey_encrypted.
 export const sessionRuntime = new Map<string, {
   serverEcdhPriv: Uint8Array;
   patientPubCompressed: Uint8Array;
 }>();
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function qrRoutes(app: FastifyInstance) {
   /**
    * Patient calls this to start a share session.
    * Body: { patient_pub_compressed_hex }
-   * Response: { session_id, qr_bytes_hex (the CBOR payload to render as QR),
-   *             server_pub_compressed_hex, expires_at, websocket_url }
+   * Response: { session_id, qr_bytes_hex, server_pub_compressed_hex, expires_at, websocket_url }
    */
   app.post("/qr-sessions", async (req, reply) => {
     const body = req.body as { patient_pub_compressed_hex?: string } | undefined;
@@ -33,15 +33,15 @@ export async function qrRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: "patient pubkey must be 33-byte compressed P-256" });
     }
 
-    const signingKey = loadOrCreateSigningKey();
+    const { signerFn } = await getSigningState();
     const sessionId = randomUUID();
     const websocketUrl = `ws://localhost:${process.env.PORT ?? 3000}/ws/${sessionId}`;
 
-    const created = createSession({
+    const created = await createSessionAsync({
       sessionId,
       patientPubCompressed: new Uint8Array(patientPub),
       websocketUrl,
-      ecdsaSigningPrivKey: signingKey.priv,
+      signerFn,
     });
 
     const expiresAt = new Date(Date.now() + SESSION_TTL_SECONDS * 1000);
@@ -73,12 +73,8 @@ export async function qrRoutes(app: FastifyInstance) {
   });
 
   /**
-   * Provider calls this to fetch the QR payload by session id (in lieu of camera scan).
-   * Camera scan would give the provider the qr_bytes directly; this endpoint
-   * supports the demo flow where the provider pastes the session id.
+   * Provider fetches QR payload by session id (demo flow; real flow uses camera scan).
    */
-  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
   app.get("/qr-sessions/:id/payload", async (req, reply) => {
     const id = (req.params as any).id as string;
     if (!UUID_RE.test(id)) {
@@ -103,12 +99,12 @@ export async function qrRoutes(app: FastifyInstance) {
   });
 
   /**
-   * Publishes the QuroVita ECDSA verification public key. In production this
-   * is distributed via the app bundle and rotated via the over-the-air channel.
+   * Publishes the QuroVita ECDSA verification public key.
+   * In production distributed via the app bundle and rotated via OTA channel.
    */
   app.get("/keys/ecdsa", async (_req, reply) => {
-    const k = loadOrCreateSigningKey();
-    return reply.send({ pub_compressed_hex: Buffer.from(k.pub).toString("hex") });
+    const { pubHex } = await getSigningState();
+    return reply.send({ pub_compressed_hex: pubHex });
   });
 
   /**
