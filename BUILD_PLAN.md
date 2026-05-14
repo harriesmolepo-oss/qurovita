@@ -24,17 +24,17 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 
 ## Phase 1 — Backend hardening
 
-- [ ] **T1.1** Replace the in-process server signing key with AWS KMS-loaded key. Module: `apps/backend/src/kms.ts`. Use `@aws-sdk/client-kms`. For local dev, fall back to the `.keys/` cache (already implemented). Add `AWS_KMS_KEY_ID` to `.env.example`. Document in `apps/backend/README.md`.
+- [x] **T1.1** Replace the in-process server signing key with AWS KMS-loaded key. Module: `apps/backend/src/kms.ts`. Use `@aws-sdk/client-kms`. For local dev, fall back to the `.keys/` cache (already implemented). Add `AWS_KMS_KEY_ID` to `.env.example`. Document in `apps/backend/README.md`.
 
-- [ ] **T1.2** Replace the in-memory `sessionRuntime` map with KMS-wrapped storage in `qr_sessions.server_ecdh_privkey_encrypted` (already a column). On each request, fetch and unwrap. Add audit_log entry per unwrap.
+- [x] **T1.2** Replace the in-memory `sessionRuntime` map with KMS-wrapped storage in `qr_sessions.server_ecdh_privkey_encrypted` (already a column). On each request, fetch and unwrap. Add audit_log entry per unwrap.
 
-- [ ] **T1.3** Add JWT-based patient auth. Module: `apps/backend/src/auth.ts`. Use `@fastify/jwt`. Endpoint `POST /auth/otp-request` (send OTP to phone), `POST /auth/otp-verify` (returns JWT). For dev, accept OTP `000000`. For prod, integrate Twilio Verify. Update all routes to require `app.authenticate` preHandler except `/healthz`, `/keys/ecdsa`, and Twilio webhook.
+- [x] **T1.3** Add JWT-based patient auth. Module: `apps/backend/src/auth.ts`. Use `@fastify/jwt`. Endpoint `POST /auth/otp-request` (send OTP to phone), `POST /auth/otp-verify` (returns JWT). For dev, accept OTP `000000`. For prod, integrate Twilio Verify. Update all routes to require `app.authenticate` preHandler except `/healthz`, `/keys/ecdsa`, and Twilio webhook.
 
-- [ ] **T1.4** Add Pino logger. Replace any `console.log` in app code with structured logs.
+- [x] **T1.4** Add Pino logger. Replace any `console.log` in app code with structured logs.
 
-- [ ] **T1.5** Add rate limiting via `@fastify/rate-limit`. 30 req/min on `/qr-sessions` create, 60 req/min on other endpoints.
+- [x] **T1.5** Add rate limiting via `@fastify/rate-limit`. 30 req/min on `/qr-sessions` create, 60 req/min on other endpoints.
 
-- [ ] **T1.6** Expand schema migration `supabase/migrations/0001_init.sql` to the full production schema from CLAUDE.md / v2.0 doc Part C2:
+- [x] **T1.6** Expand schema migration `supabase/migrations/0001_init.sql` to the full production schema from CLAUDE.md / v2.0 doc Part C2:
   - `users` (with `hpid`, `phone_e164`, `preferred_language`, `popia_consent_version`, `kyc_status`)
   - `fhir_resources` (JSONB, GIN-indexed)
   - `documents` (S3 keys + class A metadata only)
@@ -45,11 +45,11 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
   - RLS policies on all user-owned tables
   - audit_log triggers verified
 
-- [ ] **T1.7** Add `apps/backend/src/db/migrate.ts` improvement: track applied migrations in a `_migrations` table so reruns are safe.
+- [x] **T1.7** Add `apps/backend/src/db/migrate.ts` improvement: track applied migrations in a `_migrations` table so reruns are safe.
 
-- [ ] **T1.8** Add `apps/backend/src/popia/breach.ts` — POPIA 72-hour breach detection. Any time an actor reads `fhir_resources` for a `user_id != actor.sub`, log to a `breach_candidates` table and alert via Sentry. Add a daily cron via BullMQ that summarises.
+- [x] **T1.8** Add `apps/backend/src/popia/breach.ts` — POPIA 72-hour breach detection. Any time an actor reads `fhir_resources` for a `user_id != actor.sub`, log to a `breach_candidates` table and alert via Sentry. Add a daily cron via BullMQ that summarises.
 
-- [ ] **T1.9** Tests: integration tests with supertest covering `POST /qr-sessions` (happy path, malformed pubkey, rate limit), `POST /qr-sessions/:id/revoke`, `GET /qr-sessions/:id/payload` (pending, consumed, expired). Use a local Postgres via docker-compose `postgres-test` service.
+- [x] **T1.9** Tests: integration tests with supertest covering `POST /qr-sessions` (happy path, malformed pubkey, rate limit), `POST /qr-sessions/:id/revoke`, `GET /qr-sessions/:id/payload` (pending, consumed, expired). Use a local Postgres via docker-compose `postgres-test` service.
 
 ## Phase 2 — FHIR R4 server
 
