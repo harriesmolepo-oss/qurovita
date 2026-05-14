@@ -7,7 +7,8 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
-Starting T1.2
+Starting T1.3
+2026-05-13  T1.2  AES-256-GCM wrap/unwrap for server ECDH privkey in DB; sessionRuntime removed; provider join audit-logged
 2026-05-13  T1.1  KMS signing key: getSigningState() dev/prod switch; createSessionAsync() in crypto pkg; @aws-sdk/client-kms installed
 2026-05-13  T0.9  PROGRESS.md complete; BUILD_PLAN T0.1–T0.9 all checked done  e8dc5fb
 2026-05-13  T0.8  .github/workflows/ci.yml — typecheck + lint + test on PR and main push  3565855

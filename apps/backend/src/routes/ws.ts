@@ -24,6 +24,7 @@ import type { FastifyInstance } from "fastify";
 import type { WebSocket } from "ws";
 import { pool } from "../db.js";
 import { auditLog } from "../services/audit.js";
+import { getSigningState } from "../kms.js";
 
 type Role = "patient" | "provider";
 
@@ -82,7 +83,7 @@ export async function wsRoutes(app: FastifyInstance) {
     // Async setup: validate session, join room, send "joined"
     void (async () => {
       const r = await pool.query(
-        `select id, status, expires_at from qr_sessions where id = $1`,
+        `select id, status, expires_at, server_ecdh_privkey from qr_sessions where id = $1`,
         [sessionId],
       );
       if (r.rowCount === 0) {
@@ -108,6 +109,18 @@ export async function wsRoutes(app: FastifyInstance) {
       rooms.set(sessionId, room);
 
       socket.send(JSON.stringify({ type: "joined", role, peers: room.length }));
+
+      if (role === "provider" && session.server_ecdh_privkey) {
+        // Unwrap the server ECDH private key to verify integrity and log the access event.
+        // The unwrapped key is not used here yet (T2+ will use it for server-side key derivation).
+        const { unwrapPrivkey } = await getSigningState();
+        await unwrapPrivkey(new Uint8Array(session.server_ecdh_privkey));
+        await auditLog({
+          actor_kind: "provider", action: "ecdh_key.unwrap",
+          target_type: "QrSession", target_id: sessionId,
+        });
+      }
+
       await auditLog({
         actor_kind: role, action: "ws.join", target_type: "QrSession", target_id: sessionId,
       });

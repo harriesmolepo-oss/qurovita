@@ -8,13 +8,6 @@ import { auditLog } from "../services/audit.js";
 
 const DEMO_USER_ID = "11111111-1111-1111-1111-111111111111";
 
-// In-memory store of session-scoped ECDH privkeys.
-// T1.2 will replace this with KMS-wrapped storage in qr_sessions.server_ecdh_privkey_encrypted.
-export const sessionRuntime = new Map<string, {
-  serverEcdhPriv: Uint8Array;
-  patientPubCompressed: Uint8Array;
-}>();
-
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function qrRoutes(app: FastifyInstance) {
@@ -33,7 +26,7 @@ export async function qrRoutes(app: FastifyInstance) {
       return reply.code(400).send({ error: "patient pubkey must be 33-byte compressed P-256" });
     }
 
-    const { signerFn } = await getSigningState();
+    const { signerFn, wrapPrivkey } = await getSigningState();
     const sessionId = randomUUID();
     const websocketUrl = `ws://localhost:${process.env.PORT ?? 3000}/ws/${sessionId}`;
 
@@ -44,18 +37,22 @@ export async function qrRoutes(app: FastifyInstance) {
       signerFn,
     });
 
+    const wrappedPriv = await wrapPrivkey(created.serverEcdhPriv);
     const expiresAt = new Date(Date.now() + SESSION_TTL_SECONDS * 1000);
+
     await pool.query(
       `insert into qr_sessions
          (id, user_id, patient_ecdh_pubkey, server_ecdh_pubkey, server_ecdh_privkey, expires_at)
        values ($1,$2,$3,$4,$5,$6)`,
-      [sessionId, DEMO_USER_ID, patientPub, Buffer.from(created.serverEcdhPubCompressed), Buffer.from(created.serverEcdhPriv), expiresAt],
+      [
+        sessionId,
+        DEMO_USER_ID,
+        patientPub,
+        Buffer.from(created.serverEcdhPubCompressed),
+        Buffer.from(wrappedPriv),
+        expiresAt,
+      ],
     );
-
-    sessionRuntime.set(sessionId, {
-      serverEcdhPriv: created.serverEcdhPriv,
-      patientPubCompressed: new Uint8Array(patientPub),
-    });
 
     await auditLog({
       actor_id: DEMO_USER_ID, actor_kind: "patient",
@@ -100,7 +97,6 @@ export async function qrRoutes(app: FastifyInstance) {
 
   /**
    * Publishes the QuroVita ECDSA verification public key.
-   * In production distributed via the app bundle and rotated via OTA channel.
    */
   app.get("/keys/ecdsa", async (_req, reply) => {
     const { pubHex } = await getSigningState();
@@ -121,7 +117,6 @@ export async function qrRoutes(app: FastifyInstance) {
       [id],
     );
     if (r.rowCount === 0) return reply.code(404).send({ error: "not found or already consumed" });
-    sessionRuntime.delete(id);
     await auditLog({
       actor_id: DEMO_USER_ID, actor_kind: "patient",
       action: "qr.session.revoke", target_type: "QrSession", target_id: id,
