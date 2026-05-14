@@ -6,10 +6,11 @@
  *   - Backend running on localhost:3000
  *
  * Protocol (mirrors the real patient HTML + provider portal):
- *   1. Patient generates ECDH keypair, POSTs /qr-sessions
+ *   0. Authenticate: POST /auth/otp-request + POST /auth/otp-verify (OTP 000000) → JWT
+ *   1. Patient generates ECDH keypair, POSTs /qr-sessions (Authorization: Bearer <jwt>)
  *   2. Patient derives AES-256 session key: HKDF(ECDH(patient_priv, server_pub), sid)
- *   3. Patient opens WebSocket (?role=patient), waits for {type:"joined"}
- *   4. Provider opens WebSocket (?role=provider)
+ *   3. Patient opens WebSocket (?role=patient&token=<jwt>), waits for {type:"joined"}
+ *   4. Provider opens WebSocket (?role=provider&token=<jwt>)
  *   5. Provider waits for its own {type:"joined", peers:2} — this confirms it is
  *      registered in the relay room before sending "ready". Without this wait,
  *      the patient's binary bundle arrives before the provider joins the room
@@ -89,13 +90,35 @@ function wsWaitFor(ws, predicate, label, timeoutMs = 10000) {
   });
 }
 
+// ── step 0: authenticate (OTP 000000 dev shortcut) ───────────────────────
+
+const PHONE = "+27821234567";
+
+const otpReqRes = await fetch(`${API}/auth/otp-request`, {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ phone: PHONE }),
+});
+if (!otpReqRes.ok) fail(`POST /auth/otp-request → ${otpReqRes.status}: ${await otpReqRes.text()}`);
+
+const otpVerRes = await fetch(`${API}/auth/otp-verify`, {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ phone: PHONE, otp: "000000" }),
+});
+if (!otpVerRes.ok) fail(`POST /auth/otp-verify → ${otpVerRes.status}: ${await otpVerRes.text()}`);
+const { token } = await otpVerRes.json();
+pass(`Authenticated — JWT obtained`);
+
+const authHeaders = { "content-type": "application/json", "authorization": `Bearer ${token}` };
+
 // ── step 1: patient ECDH keypair + POST /qr-sessions ─────────────────────
 
 const patientEcdh = generateEcdhKeypair();
 
 const sessRes = await fetch(`${API}/qr-sessions`, {
   method: "POST",
-  headers: { "content-type": "application/json" },
+  headers: authHeaders,
   body: JSON.stringify({ patient_pub_compressed_hex: hex(patientEcdh.pubCompressed) }),
 });
 if (!sessRes.ok) fail(`POST /qr-sessions → ${sessRes.status}: ${await sessRes.text()}`);
@@ -113,7 +136,7 @@ pass(`Shared key derived (ECDH P-256 + HKDF-SHA256)`);
 
 // ── step 3: patient WS — wait for joined ─────────────────────────────────
 
-const patientWs = await wsConnect(`${websocket_url}?role=patient`);
+const patientWs = await wsConnect(`${websocket_url}?role=patient&token=${encodeURIComponent(token)}`);
 // The server immediately sends {type:"joined"} on connect; wait for it
 // so we know patient is registered before provider attempts to join.
 await wsWaitFor(patientWs, (m) => m?.type === "joined", "patient joined");
@@ -130,7 +153,7 @@ const readyPromise = wsWaitFor(
 // ── step 4 + 5: provider WS — wait for joined (peers:2) before sending ready
 
 const providerEcdh = generateEcdhKeypair();
-const providerWs = await wsConnect(`${websocket_url}?role=provider`);
+const providerWs = await wsConnect(`${websocket_url}?role=provider&token=${encodeURIComponent(token)}`);
 
 // CRITICAL: wait for {type:"joined"} before sending "ready".
 // The server's async handler adds the provider to the relay room only AFTER
@@ -159,7 +182,7 @@ pass(`Provider sent {type:"ready"}`);
 await readyPromise;
 pass(`Patient received {type:"ready"}`);
 
-const bundleRes = await fetch(`${API}/sample-bundle`);
+const bundleRes = await fetch(`${API}/sample-bundle`, { headers: { authorization: `Bearer ${token}` } });
 if (!bundleRes.ok) fail(`GET /sample-bundle → ${bundleRes.status}`);
 const bundleJson = await bundleRes.json();
 const plaintext = new TextEncoder().encode(JSON.stringify(bundleJson));

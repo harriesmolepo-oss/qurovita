@@ -6,8 +6,6 @@ import { createSessionAsync, SESSION_TTL_SECONDS } from "@qurovita/crypto";
 import { getSigningState } from "../kms.js";
 import { auditLog } from "../services/audit.js";
 
-const DEMO_USER_ID = "11111111-1111-1111-1111-111111111111";
-
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function qrRoutes(app: FastifyInstance) {
@@ -17,6 +15,7 @@ export async function qrRoutes(app: FastifyInstance) {
    * Response: { session_id, qr_bytes_hex, server_pub_compressed_hex, expires_at, websocket_url }
    */
   app.post("/qr-sessions", async (req, reply) => {
+    const userId = (req.user as { sub: string }).sub;
     const body = req.body as { patient_pub_compressed_hex?: string } | undefined;
     if (!body?.patient_pub_compressed_hex) {
       return reply.code(400).send({ error: "patient_pub_compressed_hex required" });
@@ -46,7 +45,7 @@ export async function qrRoutes(app: FastifyInstance) {
        values ($1,$2,$3,$4,$5,$6)`,
       [
         sessionId,
-        DEMO_USER_ID,
+        userId,
         patientPub,
         Buffer.from(created.serverEcdhPubCompressed),
         Buffer.from(wrappedPriv),
@@ -55,7 +54,7 @@ export async function qrRoutes(app: FastifyInstance) {
     );
 
     await auditLog({
-      actor_id: DEMO_USER_ID, actor_kind: "patient",
+      actor_id: userId, actor_kind: "patient",
       action: "qr.session.create", target_type: "QrSession", target_id: sessionId,
       details: { ttl_seconds: SESSION_TTL_SECONDS },
     });
@@ -107,6 +106,7 @@ export async function qrRoutes(app: FastifyInstance) {
    * Patient revokes a pending session.
    */
   app.post("/qr-sessions/:id/revoke", async (req, reply) => {
+    const userId = (req.user as { sub: string }).sub;
     const id = (req.params as any).id as string;
     if (!UUID_RE.test(id)) {
       return reply.code(400).send({ error: "session id format invalid" });
@@ -118,7 +118,7 @@ export async function qrRoutes(app: FastifyInstance) {
     );
     if (r.rowCount === 0) return reply.code(404).send({ error: "not found or already consumed" });
     await auditLog({
-      actor_id: DEMO_USER_ID, actor_kind: "patient",
+      actor_id: userId, actor_kind: "patient",
       action: "qr.session.revoke", target_type: "QrSession", target_id: id,
     });
     return reply.send({ revoked: true });
