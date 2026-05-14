@@ -13,6 +13,7 @@ import { qrRoutes } from "./routes/qr.js";
 import { wsRoutes } from "./routes/ws.js";
 import { getSigningState } from "./kms.js";
 import { sampleBundle } from "./services/sample-fhir.js";
+import { scheduleDailySummary } from "./popia/breach.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT ?? 3000);
@@ -100,6 +101,9 @@ app.get("/healthz", async () => ({ ok: true, ts: Date.now() }));
 
 // Warm up signing state so any KMS or file-key error surfaces at startup
 void getSigningState();
+
+// Start POPIA breach summary cron (no-ops if REDIS_URL is not set)
+void scheduleDailySummary();
 
 app.listen({ port: PORT, host: "0.0.0.0" }).then(() => {
   app.log.info(`QuroVita demo listening on http://localhost:${PORT}`);
