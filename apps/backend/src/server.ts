@@ -94,7 +94,6 @@ app.get("/healthz", async () => ({ ok: true, ts: Date.now() }));
 void getSigningState();
 
 app.listen({ port: PORT, host: "0.0.0.0" }).then(() => {
-  console.log(`\n  QuroVita demo listening on http://localhost:${PORT}`);
-  console.log(`  Patient:  http://localhost:${PORT}/patient/`);
-  console.log(`  Provider: http://localhost:${PORT}/provider/\n`);
+  app.log.info(`QuroVita demo listening on http://localhost:${PORT}`);
+  app.log.info(`Patient app: http://localhost:${PORT}/patient/`);
 });

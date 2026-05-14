@@ -6,6 +6,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { p256 } from "@noble/curves/p256";
+import { logger } from "../logger.js";
 
 const KEYS_DIR = join(process.cwd(), ".keys");
 const PRIV_PATH = join(KEYS_DIR, "ecdsa-signing.priv");
@@ -30,7 +31,7 @@ export function loadOrCreateSigningKey(): { priv: Uint8Array; pub: Uint8Array } 
   const pub = p256.getPublicKey(priv, true);
   writeFileSync(PRIV_PATH, priv);
   writeFileSync(PUB_PATH, pub);
-  console.log("Generated demo ECDSA signing key in .keys/ (NEVER do this in prod — use KMS).");
+  logger.info("Generated demo ECDSA signing key in .keys/ (NEVER do this in prod — use KMS).");
   cached = { priv, pub };
   return cached;
 }

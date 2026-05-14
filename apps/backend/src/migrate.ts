@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Pool } from "pg";
+import { logger } from "./logger.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const migrationsDir = join(__dirname, "..", "migrations");
@@ -12,14 +13,14 @@ async function run() {
   const files = readdirSync(migrationsDir).filter(f => f.endsWith(".sql")).sort();
   for (const f of files) {
     const sql = readFileSync(join(migrationsDir, f), "utf8");
-    console.log(`→ ${f}`);
+    logger.info(`→ ${f}`);
     await pool.query(sql);
   }
-  console.log("Migrations complete.");
+  logger.info("Migrations complete.");
   await pool.end();
 }
 
 run().catch(e => {
-  console.error("Migration failed:", e.message);
+  logger.error({ err: e }, "Migration failed");
   process.exit(1);
 });

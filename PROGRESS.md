@@ -7,7 +7,8 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
-Starting T1.4
+Starting T1.5
+2026-05-13  T1.4  Pino logger: shared logger.ts; console.log removed from keys.ts, migrate.ts, server.ts
 2026-05-13  T1.3  JWT auth: POST /auth/otp-request + otp-verify; OTP 000000 dev shortcut; all routes guarded; verify-roundtrip updated
 2026-05-13  T1.2  AES-256-GCM wrap/unwrap for server ECDH privkey in DB; sessionRuntime removed; provider join audit-logged
 2026-05-13  T1.1  KMS signing key: getSigningState() dev/prod switch; createSessionAsync() in crypto pkg; @aws-sdk/client-kms installed
