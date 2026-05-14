@@ -3,6 +3,7 @@ import "dotenv/config";
 import Fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
 import fastifyCors from "@fastify/cors";
+import fastifyRateLimit from "@fastify/rate-limit";
 import fastifyStatic from "@fastify/static";
 import fastifyWebsocket from "@fastify/websocket";
 import { join, dirname } from "node:path";
@@ -26,6 +27,13 @@ await app.register(fastifyCors, {
 await app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET ?? "dev-jwt-secret-do-not-use-in-production",
   sign: { expiresIn: "7d" },
+});
+
+// Global rate limit: 60 req/min baseline; POST /qr-sessions tightened to 30 below.
+await app.register(fastifyRateLimit, {
+  max: 60,
+  timeWindow: "1 minute",
+  errorResponseBuilder: () => ({ error: "Too many requests — slow down" }),
 });
 
 // Public routes — no auth required
