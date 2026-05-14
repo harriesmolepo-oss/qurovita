@@ -46,6 +46,7 @@ export interface FhirAccessContext {
  * @param ctx  Access context
  * @param db   Overrideable pool — pass a mock in tests
  */
+// CRITICAL: T2.3 must call this on every cross-user FHIR access. Failure to call this means POPIA breach detection silently doesn't fire. See BUILD_PLAN.md.
 export async function checkFhirAccess(ctx: FhirAccessContext, db: Pool = defaultPool): Promise<void> {
   if (ctx.actorId === ctx.targetUserId) return;
 

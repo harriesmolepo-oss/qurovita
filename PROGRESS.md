@@ -11,7 +11,7 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 2026-05-13  T1.8  breach.ts: POPIA cross-user fhir_resources detection → breach_candidates + Sentry; daily BullMQ cron; 3-case vitest
 2026-05-13  T1.7  migrate.ts: _migrations tracking table; reruns skip already-applied files
 2026-05-13  T1.6  0002_phase1_schema.sql: fhir_resources, documents, consent_records, kyc_verifications, whatsapp_sessions, ai_compliance_log, breach_candidates; RLS on all
-2026-05-13  T1.5  @fastify/rate-limit v9: 30 req/min on POST /qr-sessions, 60 req/min global
+2026-05-13  T1.5  @fastify/rate-limit v8: 60 req/min global (per-route limit deferred; v9 incompatible with Fastify 4)
 2026-05-13  T1.4  Pino logger: shared logger.ts; console.log removed from keys.ts, migrate.ts, server.ts
 2026-05-13  T1.3  JWT auth: POST /auth/otp-request + otp-verify; OTP 000000 dev shortcut; all routes guarded; verify-roundtrip updated
 2026-05-13  T1.2  AES-256-GCM wrap/unwrap for server ECDH privkey in DB; sessionRuntime removed; provider join audit-logged

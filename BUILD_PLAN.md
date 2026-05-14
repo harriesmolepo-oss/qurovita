@@ -61,6 +61,11 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 
 - [ ] **T2.3** Expose passthrough routes: `POST /fhir/Patient`, `GET /fhir/Patient/:id`, `POST /fhir/Bundle`, etc. — but with the patient auth + RLS-equivalent check (a patient can only read/write resources for `subject.reference == Patient/{user.sub}`).
 
+  **Acceptance criteria (must pass before moving to T2.4):**
+  - Every route handler calls `checkFhirAccess()` from `src/popia/breach.ts` on any cross-user read.
+  - Integration test asserting: `GET /fhir/Patient/:otherUserId` as a different authenticated user returns HTTP 403 AND exactly one row appears in `breach_candidates` with the correct `actor_id`, `target_user_id`, and route metadata in `query_context`.
+  - If this test is missing or skipped, do not merge T2.3.
+
 - [ ] **T2.4** Update `services/sample-fhir.ts` to write the sample bundle into HAPI on first user login instead of returning hardcoded JSON. The "share" flow then reads from HAPI like real production.
 
 - [ ] **T2.5** Add a Bundle builder service that, given a patient ID and a list of resource IDs, builds a `Bundle` of type `collection` ready for the OOB transfer. This is what the patient app calls when generating a share QR.
