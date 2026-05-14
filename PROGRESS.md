@@ -7,7 +7,8 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
-Starting T1.7
+Starting T1.8
+2026-05-13  T1.7  migrate.ts: _migrations tracking table; reruns skip already-applied files
 2026-05-13  T1.6  0002_phase1_schema.sql: fhir_resources, documents, consent_records, kyc_verifications, whatsapp_sessions, ai_compliance_log, breach_candidates; RLS on all
 2026-05-13  T1.5  @fastify/rate-limit v9: 30 req/min on POST /qr-sessions, 60 req/min global
 2026-05-13  T1.4  Pino logger: shared logger.ts; console.log removed from keys.ts, migrate.ts, server.ts
