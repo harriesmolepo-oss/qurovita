@@ -8,6 +8,7 @@
 
 import type { FastifyInstance } from "fastify";
 import { pool } from "./db.js";
+import { seedSampleData } from "./services/sample-fhir.js";
 
 // Extend @fastify/jwt types so req.user is typed throughout the app
 declare module "@fastify/jwt" {
@@ -74,6 +75,9 @@ export async function authRoutes(app: FastifyInstance) {
       [`Patient ${phone}`, phone],
     );
     const userId = upsert.rows[0].id;
+
+    // Seed sample FHIR data on first login (idempotent)
+    void seedSampleData(userId);
 
     const token = app.jwt.sign({ sub: userId, phone });
     return reply.send({ token });

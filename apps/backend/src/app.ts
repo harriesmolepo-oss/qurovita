@@ -12,7 +12,7 @@ import { authRoutes } from "./auth.js";
 import { qrRoutes } from "./routes/qr.js";
 import { wsRoutes } from "./routes/ws.js";
 import { fhirRoutes } from "./routes/fhir.js";
-import { sampleBundle } from "./services/sample-fhir.js";
+import { sampleBundle, seedSampleData } from "./services/sample-fhir.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -75,7 +75,28 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
   await app.register(wsRoutes);
   await app.register(fhirRoutes);
 
-  app.get("/sample-bundle", async () => sampleBundle("11111111-1111-1111-1111-111111111111"));
+  // Legacy demo route: serve live FHIR store data for the authenticated user;
+  // fall back to the hardcoded bundle for the seeded demo user.
+  app.get("/sample-bundle", async (req) => {
+    const userId = (req.user as { sub: string } | undefined)?.sub ?? "11111111-1111-1111-1111-111111111111";
+    await seedSampleData(userId);
+    const { fhirClient } = await import("./fhir/client.js");
+    const resources = await Promise.all([
+      fhirClient(userId).search("Patient"),
+      fhirClient(userId).search("Condition"),
+      fhirClient(userId).search("MedicationStatement"),
+      fhirClient(userId).search("Observation"),
+      fhirClient(userId).search("AllergyIntolerance"),
+    ]);
+    const allResources = resources.flat();
+    if (allResources.length === 0) return sampleBundle(userId);
+    return {
+      resourceType: "Bundle",
+      type: "collection",
+      timestamp: new Date().toISOString(),
+      entry: allResources.map(r => ({ resource: r })),
+    };
+  });
 
   await app.register(fastifyStatic, {
     root: join(__dirname, "..", "public", "patient"),
