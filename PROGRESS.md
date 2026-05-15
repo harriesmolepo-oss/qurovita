@@ -7,6 +7,11 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
+2026-05-15  T2.5  bundle-builder.ts: buildShareBundle() assembles FHIR collection Bundle for OOB share flow
+2026-05-15  T2.4  sample-fhir.ts: seedSampleData() writes bundle to store on first login; /sample-bundle reads live data
+2026-05-15  T2.3  FHIR routes GET/POST; cross-user 403 + breach_candidates; T2.3 acceptance criteria pass; auth upserts real user rows
+2026-05-15  T2.2  FhirClient abstraction (create/read/search/bundleTransaction) over Postgres store
+2026-05-15  T2.1  Medplum Node-native decision; ADR 0001; 0003_fhir_native.sql; @medplum/fhirtypes devDep
 2026-05-14  T1.9  12 supertest integration tests for QR session endpoints (create/payload/revoke); rate-limit isolated to fresh app; @fastify/rate-limit downgraded to v8
 2026-05-13  T1.8  breach.ts: POPIA cross-user fhir_resources detection → breach_candidates + Sentry; daily BullMQ cron; 3-case vitest
 2026-05-13  T1.7  migrate.ts: _migrations tracking table; reruns skip already-applied files
