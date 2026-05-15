@@ -53,22 +53,24 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 
 ## Phase 2 — FHIR R4 server
 
-- [ ] **T2.1** Run HAPI FHIR JPA Server R4 as a sidecar in docker-compose. Container `hapi-fhir`, port 8080. Document the trade-off in `apps/backend/README.md`: Java sidecar buys R4 certification and capability statement; Node-native (`@medplum/core`) is the alternative if ops want to drop a JVM.
+- [x] **T2.1** Run HAPI FHIR JPA Server R4 as a sidecar in docker-compose. Container `hapi-fhir`, port 8080. Document the trade-off in `apps/backend/README.md`: Java sidecar buys R4 certification and capability statement; Node-native (`@medplum/core`) is the alternative if ops want to drop a JVM.
 
   🔴 HUMAN ACTION NEEDED: confirm you're OK shipping a JVM sidecar in production. If not, switch this task to `@medplum/core` and document.
+  → **Decision taken**: Medplum Node-native (@medplum/fhirtypes + Postgres JSONB). See docs/decisions/0001-fhir-server.md.
 
-- [ ] **T2.2** Add `apps/backend/src/fhir/client.ts` — thin client to HAPI. Methods: `create(resource)`, `read(type, id)`, `search(type, params)`, `bundleTransaction(bundle)`.
+- [x] **T2.2** Add `apps/backend/src/fhir/client.ts` — thin client to HAPI. Methods: `create(resource)`, `read(type, id)`, `search(type, params)`, `bundleTransaction(bundle)`.
 
-- [ ] **T2.3** Expose passthrough routes: `POST /fhir/Patient`, `GET /fhir/Patient/:id`, `POST /fhir/Bundle`, etc. — but with the patient auth + RLS-equivalent check (a patient can only read/write resources for `subject.reference == Patient/{user.sub}`).
+- [x] **T2.3** Expose passthrough routes: `POST /fhir/Patient`, `GET /fhir/Patient/:id`, `POST /fhir/Bundle`, etc. — but with the patient auth + RLS-equivalent check (a patient can only read/write resources for `subject.reference == Patient/{user.sub}`).
 
   **Acceptance criteria (must pass before moving to T2.4):**
   - Every route handler calls `checkFhirAccess()` from `src/popia/breach.ts` on any cross-user read.
   - Integration test asserting: `GET /fhir/Patient/:otherUserId` as a different authenticated user returns HTTP 403 AND exactly one row appears in `breach_candidates` with the correct `actor_id`, `target_user_id`, and route metadata in `query_context`.
   - If this test is missing or skipped, do not merge T2.3.
+  → **All criteria passing** (test/fhir-routes.test.ts, tests (a) and (b)).
 
-- [ ] **T2.4** Update `services/sample-fhir.ts` to write the sample bundle into HAPI on first user login instead of returning hardcoded JSON. The "share" flow then reads from HAPI like real production.
+- [x] **T2.4** Update `services/sample-fhir.ts` to write the sample bundle into HAPI on first user login instead of returning hardcoded JSON. The "share" flow then reads from HAPI like real production.
 
-- [ ] **T2.5** Add a Bundle builder service that, given a patient ID and a list of resource IDs, builds a `Bundle` of type `collection` ready for the OOB transfer. This is what the patient app calls when generating a share QR.
+- [x] **T2.5** Add a Bundle builder service that, given a patient ID and a list of resource IDs, builds a `Bundle` of type `collection` ready for the OOB transfer. This is what the patient app calls when generating a share QR.
 
 ## Phase 3 — SAHPRA Class A OCR + AI assistant
 
