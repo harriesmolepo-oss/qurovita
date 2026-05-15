@@ -7,6 +7,7 @@
 //       Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE_SID.
 
 import type { FastifyInstance } from "fastify";
+import { pool } from "./db.js";
 
 // Extend @fastify/jwt types so req.user is typed throughout the app
 declare module "@fastify/jwt" {
@@ -20,9 +21,6 @@ declare module "@fastify/jwt" {
 // Dev only — OTPs are never sent via SMS; 000000 is always valid.
 const otpStore = new Map<string, { otp: string; expiresAt: number }>();
 const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
-
-// Demo user used until full user registration is in place (T1.6 onwards)
-const DEMO_USER_ID = "11111111-1111-1111-1111-111111111111";
 
 export async function authRoutes(app: FastifyInstance) {
   /**
@@ -67,7 +65,17 @@ export async function authRoutes(app: FastifyInstance) {
 
     otpStore.delete(phone);
 
-    const token = app.jwt.sign({ sub: DEMO_USER_ID, phone });
+    // Look up or create a user record keyed by phone_e164
+    const upsert = await pool.query<{ id: string }>(
+      `insert into users (display_name, phone_e164)
+       values ($1, $2)
+       on conflict (phone_e164) do update set phone_e164 = excluded.phone_e164
+       returning id`,
+      [`Patient ${phone}`, phone],
+    );
+    const userId = upsert.rows[0].id;
+
+    const token = app.jwt.sign({ sub: userId, phone });
     return reply.send({ token });
   });
 }

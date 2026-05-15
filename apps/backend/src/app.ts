@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { authRoutes } from "./auth.js";
 import { qrRoutes } from "./routes/qr.js";
 import { wsRoutes } from "./routes/ws.js";
+import { fhirRoutes } from "./routes/fhir.js";
 import { sampleBundle } from "./services/sample-fhir.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -72,6 +73,7 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
 
   await app.register(qrRoutes);
   await app.register(wsRoutes);
+  await app.register(fhirRoutes);
 
   app.get("/sample-bundle", async () => sampleBundle("11111111-1111-1111-1111-111111111111"));
 
