@@ -63,6 +63,9 @@ importers:
         specifier: ^10.3.1
         version: 10.3.1
     devDependencies:
+      '@medplum/fhirtypes':
+        specifier: 5.1.11
+        version: 5.1.11
       '@qurovita/config-eslint':
         specifier: workspace:^
         version: link:../../packages/config-eslint
@@ -760,6 +763,10 @@ packages:
   '@lukeed/ms@2.0.2':
     resolution: {integrity: sha512-9I2Zn6+NJLfaGoz9jN3lpwDgAYvfGeNYdbAIjJOqzs4Tpc+VU3Jqq4IofSUBKajiDS8k9fZIg18/z13mpk1bsA==}
     engines: {node: '>=8'}
+
+  '@medplum/fhirtypes@5.1.11':
+    resolution: {integrity: sha512-9ncOuDkzlJ19KUCyP1vmnQR+wE3kqU+DiOCc82Q7Xde+cWoY5c+pqaeK1FfPO3FXOe+0gIEfEaE1i3oXyJdo5g==}
+    engines: {node: ^22.18.0 || >=24.2.0}
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
     resolution: {integrity: sha512-QZHtlVgbAdy2zAqNA9Gu1UpIuI8Xvsd1v8ic6B2pZmeFnFcMWiPLfWXh7TVw4eGEZ/C9TH281KwhVoeQUKbyjw==}
@@ -3593,6 +3600,8 @@ snapshots:
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
   '@lukeed/ms@2.0.2': {}
+
+  '@medplum/fhirtypes@5.1.11': {}
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
     optional: true
