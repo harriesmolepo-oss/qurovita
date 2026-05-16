@@ -26,7 +26,7 @@ export async function storeCreate<T extends Resource>(
   await pool.query(
     `insert into fhir_resources (user_id, resource_type, fhir_id, data, source)
      values ($1, $2, $3, $4::jsonb, $5)
-     on conflict (resource_type, fhir_id) do update
+     on conflict (user_id, resource_type, fhir_id) do update
        set data = excluded.data, updated_at = now()`,
     [userId, resource.resourceType, fhirId, JSON.stringify(stored), source],
   );

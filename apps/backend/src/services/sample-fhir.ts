@@ -6,6 +6,7 @@
 //
 // The sample represents: HIV (on ART), hypertension, one allergy.
 // In production this comes from the patient's WatermelonDB via their own uploads.
+import { pool } from "../db.js";
 import { fhirClient } from "../fhir/client.js";
 import type { Bundle } from "@medplum/fhirtypes";
 
@@ -56,18 +57,21 @@ export function sampleBundle(patientId: string): Bundle {
   };
 }
 
+const SEED_RESOURCE_COUNT = 9;
+
 /**
- * Seed sample FHIR resources for userId if none exist yet.
- * Idempotent: no-ops if any fhir_resources row already exists for this user.
- * Call once at first login.
+ * Seed sample FHIR resources for userId if the full seed hasn't been applied.
+ * Idempotent: no-ops only when the full expected count is present. A partial
+ * seed (e.g. from a crashed first run) triggers a full upsert to complete it.
  */
 export async function seedSampleData(userId: string): Promise<void> {
+  const { rows } = await pool.query<{ n: number }>(
+    `select count(*)::int as n from fhir_resources where user_id = $1`,
+    [userId],
+  );
+  if (rows[0].n >= SEED_RESOURCE_COUNT) return;
+
   const client = fhirClient(userId);
-
-  // Check for existing resources to stay idempotent
-  const existing = await client.search("Patient");
-  if (existing.length > 0) return;
-
   const bundle = sampleBundle(userId);
   await client.bundleTransaction(bundle);
 }
