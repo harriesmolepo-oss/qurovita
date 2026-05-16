@@ -89,7 +89,7 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 
 - [x] **T3.3** Add `POST /documents` endpoint: accepts a file upload, stores in S3 (af-south-1, KMS-encrypted), calls `ocr-safe.ts`, returns the `DocumentReference` resource. Patient-auth required.
 
-- [ ] **T3.4** Build `apps/backend/src/services/ai-assistant.ts` from the spec in CLAUDE.md and v2.0 doc Part C4.
+- [x] **T3.4** Build `apps/backend/src/services/ai-assistant.ts` from the spec in CLAUDE.md and v2.0 doc Part C4.
   - Hard-coded system prompt as a `const`
   - SHA-256 hash of the prompt recorded at module load and on every call
   - Anthropic API call with `claude-sonnet-4-20250514`, max_tokens 600
@@ -98,11 +98,13 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
   - Violations → block, replace with language-localised safe fallback, log to `ai_compliance_log` with `verdict='blocked'` and `violation_tags`
   - Disclaimer appended if missing
 
-- [ ] **T3.5** Tests for `ai-assistant.ts`: the 8 test cases in CLAUDE.md must all pass deterministically. 4 "allowed" cases must return text from the model; 4 "blocked" cases must return the safe fallback. Mock the Anthropic SDK in tests.
+- [x] **T3.5** Tests for `ai-assistant.ts`: the 8 test cases in CLAUDE.md must all pass deterministically. 4 "allowed" cases must return text from the model; 4 "blocked" cases must return the safe fallback. Mock the Anthropic SDK in tests.
+  → Satisfied by `ai-assistant.test.ts` written during T3.4: tests #1–4 cover 4 allowed cases; tests #5–8 cover 4 blocked cases (2 pre-flight, 2 post-gen); 7 additional tests cover log integrity, prompt hash, auth, and length limits (15 tests total, all green).
 
   🔴 HUMAN ACTION NEEDED: set `ANTHROPIC_API_KEY` in `.env.local` before running tests. The mock-mode tests don't need it; live-mode integration tests do.
 
-- [ ] **T3.6** Add `POST /assistant/ask` endpoint: `{ language, message }` → `{ text, verdict, violations }`. Patient-auth required.
+- [x] **T3.6** Add `POST /assistant/ask` endpoint: `{ language, message }` → `{ text, verdict, violations }`. Patient-auth required.
+  → Satisfied by `apps/backend/src/routes/assistant.ts` written during T3.4: JWT auth verified by test #13; 500-char limit by test #14; verdict/text/violations shape verified across tests #5, #6, #7, #8.
 
 ## Phase 4 — Mobile (Expo / React Native)
 
