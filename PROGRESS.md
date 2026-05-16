@@ -7,6 +7,7 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
+2026-05-16  T2.x  fix: per-user FHIR unique index (user_id,resource_type,fhir_id); seedSampleData count-guard; all Phase 2 checks pass  4ebad15
 2026-05-15  T2.5  bundle-builder.ts: buildShareBundle() assembles FHIR collection Bundle for OOB share flow
 2026-05-15  T2.4  sample-fhir.ts: seedSampleData() writes bundle to store on first login; /sample-bundle reads live data
 2026-05-15  T2.3  FHIR routes GET/POST; cross-user 403 + breach_candidates; T2.3 acceptance criteria pass; auth upserts real user rows
