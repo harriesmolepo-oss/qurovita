@@ -76,8 +76,8 @@ export async function authRoutes(app: FastifyInstance) {
     );
     const userId = upsert.rows[0].id;
 
-    // Seed sample FHIR data on first login (idempotent)
-    void seedSampleData(userId);
+    // Seed sample FHIR data on first login (idempotent, awaited so callers see live data)
+    await seedSampleData(userId);
 
     const token = app.jwt.sign({ sub: userId, phone });
     return reply.send({ token });
