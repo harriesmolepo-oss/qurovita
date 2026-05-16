@@ -87,7 +87,7 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 - [x] **T3.2** Tests for `ocr-safe.ts`: 50 sample documents (mix of lab/prescription/discharge/imaging/referral/junk) — classifier accuracy ≥90% on doc type. Tests also assert that no clinical value field appears in the output `DocumentReference`. Use fixtures in `apps/backend/test/fixtures/ocr/`.
   → Satisfied by `ocr-safe.test.ts` written during T3.1: 30 inline fixtures covering all 5 categories, ≥90% accuracy gate, compliance negatives, mocked-Textract integration (28 tests, all green).
 
-- [ ] **T3.3** Add `POST /documents` endpoint: accepts a file upload, stores in S3 (af-south-1, KMS-encrypted), calls `ocr-safe.ts`, returns the `DocumentReference` resource. Patient-auth required.
+- [x] **T3.3** Add `POST /documents` endpoint: accepts a file upload, stores in S3 (af-south-1, KMS-encrypted), calls `ocr-safe.ts`, returns the `DocumentReference` resource. Patient-auth required.
 
 - [ ] **T3.4** Build `apps/backend/src/services/ai-assistant.ts` from the spec in CLAUDE.md and v2.0 doc Part C4.
   - Hard-coded system prompt as a `const`
@@ -220,6 +220,7 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 
 ## Launch Readiness gates (must be green before patient #1)
 
+- [ ] `ZU_ST_TRANSLATIONS_REVIEWED` flag in `ai-assistant.ts` set to `true` after clinical advisor + native speaker sign-off on isiZulu / Sesotho fallback strings
 - [ ] SAHPRA SaMD Class A notification filed AND acknowledged (5-day ack received)
 - [ ] Information Officer registered (HUMAN — `inforeg@justice.gov.za`)
 - [ ] Privacy policy live at `qurovita.co.za/privacy`

@@ -14,6 +14,7 @@ import { qrRoutes } from "./routes/qr.js";
 import { wsRoutes } from "./routes/ws.js";
 import { fhirRoutes } from "./routes/fhir.js";
 import { documentsRoute } from "./routes/documents.js";
+import { assistantRoute } from "./routes/assistant.js";
 import { sampleBundle, seedSampleData } from "./services/sample-fhir.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -80,6 +81,7 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
   await app.register(wsRoutes);
   await app.register(fhirRoutes);
   await app.register(documentsRoute);
+  await app.register(assistantRoute);
 
   // Legacy demo route: serve live FHIR store data for the authenticated user;
   // fall back to the hardcoded bundle for the seeded demo user.

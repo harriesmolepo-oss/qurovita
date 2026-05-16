@@ -13,6 +13,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.96.0",
     "@aws-sdk/client-kms": "^3.1045.0",
     "@aws-sdk/client-s3": "^3.1048.0",
     "@aws-sdk/client-textract": "^3.1048.0",

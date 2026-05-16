@@ -7,6 +7,7 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
+2026-05-16  T3.4  ai-assistant.ts: HPCSA Booklet 20 compliant assistant; 5 pre/post-gen violation patterns; ai_compliance_log; 15 tests green; i18n gate; POPIA monitoring SQL  TBD
 2026-05-16  T3.3  POST /documents: S3 upload + magic-byte check + idempotency + OCR pipeline; 9 tests green  01bc121
 2026-05-16  T3.1  ocr-safe.ts: SAHPRA Class A classifier + audit_log fingerprint; 0005_documents_fts.sql; 28 tests green  bf00765
 2026-05-16  T2.x  fix: per-user FHIR unique index (user_id,resource_type,fhir_id); seedSampleData count-guard; all Phase 2 checks pass  4ebad15
