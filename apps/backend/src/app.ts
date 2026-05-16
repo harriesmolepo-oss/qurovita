@@ -6,12 +6,14 @@ import fastifyCors from "@fastify/cors";
 import fastifyRateLimit from "@fastify/rate-limit";
 import fastifyStatic from "@fastify/static";
 import fastifyWebsocket from "@fastify/websocket";
+import multipart from "@fastify/multipart";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { authRoutes } from "./auth.js";
 import { qrRoutes } from "./routes/qr.js";
 import { wsRoutes } from "./routes/ws.js";
 import { fhirRoutes } from "./routes/fhir.js";
+import { documentsRoute } from "./routes/documents.js";
 import { sampleBundle, seedSampleData } from "./services/sample-fhir.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -45,6 +47,9 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
   });
 
   await app.register(fastifyWebsocket);
+  // 25 MB plugin limit — route handler enforces the 20 MB soft limit with a
+  // typed error code; files between 20-25 MB get the nice error message.
+  await app.register(multipart, { limits: { fileSize: 25 * 1024 * 1024 } });
   await app.register(authRoutes);
 
   // Paths exempt from JWT verification
@@ -74,6 +79,7 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
   await app.register(qrRoutes);
   await app.register(wsRoutes);
   await app.register(fhirRoutes);
+  await app.register(documentsRoute);
 
   // Legacy demo route: serve live FHIR store data for the authenticated user;
   // fall back to the hardcoded bundle for the seeded demo user.
