@@ -7,6 +7,7 @@ Format: `YYYY-MM-DD  task-id  short summary  commit-sha`
 ---
 
 <!-- entries will appear below this line -->
+2026-05-20  T4.2  expo-router screens: auth guard, sign-up (3-step), kyc placeholder, records/share/assistant; i18n en/zu/st; POPIA consent hash; local JWT expiry decode
 2026-05-20  T4.1  Expo SDK 54 scaffold; New Arch off; BLE+camera perms; babel decorators; all typechecks pass
 2026-05-16  T3.4  ai-assistant.ts: HPCSA Booklet 20 compliant assistant; 5 pre/post-gen violation patterns; ai_compliance_log; 15 tests green; i18n gate; POPIA monitoring SQL  73d26f7
 2026-05-16  T3.3  POST /documents: S3 upload + magic-byte check + idempotency + OCR pipeline; 9 tests green  01bc121

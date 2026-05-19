@@ -1,0 +1,52 @@
+{
+  "auth": {
+    "selectLanguage": "Khetha ulimi lwakho",
+    "english": "English",
+    "isizulu": "isiZulu",
+    "sesotho": "Sesotho",
+    "continue": "Qhubeka",
+    "privacyTitle": "Ubumfihlo Nezivumelwano",
+    "privacyAgree": "Ngifunde futhi ngivumelana nezimiso ezingenhla",
+    "phoneLabel": "Inombolo yocingo",
+    "phonePlaceholder": "+27 8x xxx xxxx",
+    "sendCode": "Thumela ikhodi yokuqinisekisa",
+    "otpLabel": "Ikhodi yokuqinisekisa",
+    "otpPlaceholder": "Ikhodi enamanani ayisithupha",
+    "otpSent": "Ikhodi ithunyelwe ku-{{phone}}. Ngesikhathi sokuthuthukisa, sebenzisa 000000.",
+    "verify": "Qinisekisa",
+    "back": "Emuva",
+    "invalidPhone": "Sicela ufake inombolo yocingo eválid yaseNingizimu Afrika (+27 noma 0 ulandele amanani ayisishiyagalolunye).",
+    "invalidOtp": "Sicela ufake ikhodi enamanani ayisithupha.",
+    "errorNetwork": "Iphutha lenethiwekhi. Sicela uhlole ukuxhumana kwakho bese uzame futhi.",
+    "errorUnknown": "Kukhona okungahambanga kahle. Sicela uzame futhi."
+  },
+  "kyc": {
+    "title": "Ukuqinisekisa Ubunikazi",
+    "body": "Ukuqinisekisa ubunikazi kuzotholakala maduze. Ungaqhubeka ukuhlola i-QuroVita phakathi nalesi sikhathi.",
+    "continue": "Qhubeka ku-QuroVita"
+  },
+  "tabs": {
+    "records": "Amarekhodi",
+    "share": "Yabelana",
+    "assistant": "Umsizi"
+  },
+  "home": {
+    "title": "Amarekhodi Ami Ezempilo",
+    "noRecords": "Awekho amarekhodi ezempilo okwamanje. Amarekhodi ayabelanwe nawe yi-clinic azovela lapha."
+  },
+  "share": {
+    "title": "Yabelana Ngamarekhodi",
+    "body": "Khetha amarekhodi ofuna ukuwabelana nawo, bese uchofa Yabelana ukuze udale ikhodi ye-QR ephephile ye-clinic.",
+    "selectAll": "Khetha konke",
+    "shareButton": "Yabelana ngamarekhodi akhethiwe"
+  },
+  "assistant": {
+    "title": "Umsizi Wezempilo",
+    "placeholder": "Buza umbuzo wezempilo...",
+    "send": "Thumela",
+    "disclaimer": "Lo msizi uhlinzeka ngolwazi lwezempilo olujwayelekile kuphela. Ngeke akwazi ukuhumusha imiphumela yakho yezivivinyo noma akunike iseluleko sezokwelapha. Hlala uxhumana no-healthcare provider wakho.",
+    "blockedMessage": "Angikwazi ukuphendula lowo mbuzo othile mayelana nemiphumela yakho, kodwa ngingachaza imibono jikelele yezempilo noma ngikhombe imibuzo ozoyibuza udokotela wakho.",
+    "errorNetwork": "Iphutha lenethiwekhi. Sicela uhlole ukuxhumana kwakho.",
+    "errorUnknown": "Ayikwazanga ukuthola impendulo. Sicela uzame futhi."
+  }
+}

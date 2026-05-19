@@ -1,0 +1,52 @@
+{
+  "auth": {
+    "selectLanguage": "Kgetha puo ea hau",
+    "english": "English",
+    "isizulu": "isiZulu",
+    "sesotho": "Sesotho",
+    "continue": "Tsoela pele",
+    "privacyTitle": "Lekunutu le Tumellano",
+    "privacyAgree": "Ke bale 'me ke lumela le litlhoko tse ka holimo",
+    "phoneLabel": "Nomoro ea mohala",
+    "phonePlaceholder": "+27 8x xxx xxxx",
+    "sendCode": "Romela khout ea netefatso",
+    "otpLabel": "Khout ea netefatso",
+    "otpPlaceholder": "Khout ea manomoro a tsheletseng",
+    "otpSent": "Khout e rometse ho {{phone}}. Nakong ea tlhahiso, sebelisa 000000.",
+    "verify": "Netefatsa",
+    "back": "Morao",
+    "invalidPhone": "Ka kopo kenya nomoro ea mohala e nepahetseng ea Afrika Boroa (+27 kapa 0 e lateloa ke manomoro a robong).",
+    "invalidOtp": "Ka kopo kenya khout ea manomoro a tsheletseng.",
+    "errorNetwork": "Phoso ea marang-rang. Ka kopo hlahloba khokahano ea hau 'me leka hape.",
+    "errorUnknown": "Ho etsahetse ntho e sa nepahalang. Ka kopo leka hape."
+  },
+  "kyc": {
+    "title": "Netefatso ea Botho",
+    "body": "Netefatso ea botho e tla ba teng haufinyane. O ntse o ka hlahloba QuroVita nakong ena.",
+    "continue": "Tsoela pele ho QuroVita"
+  },
+  "tabs": {
+    "records": "Lirekoto",
+    "share": "Arolelana",
+    "assistant": "Motlatsi"
+  },
+  "home": {
+    "title": "Lirekoto Tsa Ka Tsa Bophelo",
+    "noRecords": "Ha ho lirekoto tsa bophelo joale. Lirekoto tse aroletsoeng le uena ke kliniki li tla hlaha mona."
+  },
+  "share": {
+    "title": "Arolelana Lirekoto",
+    "body": "Kgetha lirekoto tseo u batlang ho li arolelana, ebe u tobetsa Arolelana ho hlahisa khout ea QR e sirelelitsoeng bakeng sa kliniki.",
+    "selectAll": "Kgetha tsohle",
+    "shareButton": "Arolelana lirekoto tse khethiloeng"
+  },
+  "assistant": {
+    "title": "Motlatsi oa Bophelo",
+    "placeholder": "Botsa potso ea bophelo...",
+    "send": "Romela",
+    "disclaimer": "Motlatsi ena o fana ka tlhaiso-leseling ea kakaretso ea bophelo feela. Ha a kake a hlalosa liphello tsa hau tsa liteko kapa a u fa keletso ea bongaka. Lula u buisana le mofani oa tlhokomelo ea bophelo oa hau.",
+    "blockedMessage": "Ha ke kake ka araba potso eo e itseng mabapi le liphello tsa hau, empa nka hlalosa maikutlo a kakaretso a bophelo kapa ke supise lipotso tseo u ka li botsa ngaka ea hau.",
+    "errorNetwork": "Phoso ea marang-rang. Ka kopo hlahloba khokahano ea hau.",
+    "errorUnknown": "Ha e kaka ea fumana karabo. Ka kopo leka hape."
+  }
+}

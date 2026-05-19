@@ -1,0 +1,52 @@
+{
+  "auth": {
+    "selectLanguage": "Select your language",
+    "english": "English",
+    "isizulu": "isiZulu",
+    "sesotho": "Sesotho",
+    "continue": "Continue",
+    "privacyTitle": "Privacy & Consent",
+    "privacyAgree": "I have read and agree to the terms above",
+    "phoneLabel": "Mobile number",
+    "phonePlaceholder": "+27 8x xxx xxxx",
+    "sendCode": "Send verification code",
+    "otpLabel": "Verification code",
+    "otpPlaceholder": "6-digit code",
+    "otpSent": "A code was sent to {{phone}}. In development, use 000000.",
+    "verify": "Verify",
+    "back": "Back",
+    "invalidPhone": "Please enter a valid South African mobile number (+27 or 0 followed by 9 digits).",
+    "invalidOtp": "Please enter the 6-digit code.",
+    "errorNetwork": "Network error. Please check your connection and try again.",
+    "errorUnknown": "Something went wrong. Please try again."
+  },
+  "kyc": {
+    "title": "Identity Verification",
+    "body": "Identity verification will be available soon. You can still explore QuroVita in the meantime.",
+    "continue": "Continue to QuroVita"
+  },
+  "tabs": {
+    "records": "Records",
+    "share": "Share",
+    "assistant": "Assistant"
+  },
+  "home": {
+    "title": "My Health Records",
+    "noRecords": "No health records yet. Records shared with you by a clinic will appear here."
+  },
+  "share": {
+    "title": "Share Records",
+    "body": "Select the records you want to share, then tap Share to generate a secure QR code for the clinic.",
+    "selectAll": "Select all",
+    "shareButton": "Share selected records"
+  },
+  "assistant": {
+    "title": "Health Assistant",
+    "placeholder": "Ask a health question...",
+    "send": "Send",
+    "disclaimer": "This assistant provides general health information only. It cannot interpret your test results or provide medical advice. Always consult your healthcare provider.",
+    "blockedMessage": "I can't answer that specific question about your results, but I can explain general health concepts or suggest questions to ask your doctor.",
+    "errorNetwork": "Network error. Please check your connection.",
+    "errorUnknown": "Could not get a response. Please try again."
+  }
+}

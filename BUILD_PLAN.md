@@ -111,13 +111,14 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 - [x] **T4.1** Create `apps/mobile` with `pnpm dlx create-expo-app`. SDK 51, Android-first. Add `react-native-ble-plx@3.2`, `expo-secure-store`, `expo-camera`, `react-native-qrcode-svg`, `@nozbe/watermelondb`, `i18next`, `react-i18next`.
   → Scaffolded with Expo SDK 54 (RN 0.81.5). New Architecture disabled (newArchEnabled: false) for BLE + WatermelonDB compatibility. babel.config.js with @babel/plugin-proposal-decorators (legacy). Android BLE/camera permissions + ble-plx expo plugin in app.json. slug/package: qurovita/co.qurovita.app. All workspace typechecks pass.
 
-- [ ] **T4.2** App scaffolding:
+- [x] **T4.2** App scaffolding:
   - `app/_layout.tsx` — i18n provider, auth guard
   - `app/(auth)/sign-up.tsx` — POPIA consent screen with hashed text, language picker (en/zu/st), phone OTP
   - `app/(auth)/kyc.tsx` — Smile ID SDK integration placeholder (vendor onboarding required — see T5.1)
   - `app/(home)/index.tsx` — record list
   - `app/(home)/share.tsx` — the ShareRecordsScreen
   - `app/(home)/assistant.tsx` — chat UI to `/assistant/ask`
+  → All 6 screens scaffolded with expo-router. Auth state machine with local JWT expiry decode (Tightening 3). API_BASE_URL throws RN error overlay on misconfiguration (Tightening 1). 🔴 backend /auth/otp-verify must be updated to persist consent_hash — documented in useAuth.ts (Tightening 2). All workspace typechecks pass.
 
 - [ ] **T4.3** Implement `apps/mobile/src/screens/ShareRecordsScreen.tsx` per v2.0 doc Part C27:
   - Patient selects FHIR resources from WatermelonDB
