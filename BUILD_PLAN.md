@@ -92,7 +92,7 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 - [x] **T3.4** Build `apps/backend/src/services/ai-assistant.ts` from the spec in CLAUDE.md and v2.0 doc Part C4.
   - Hard-coded system prompt as a `const`
   - SHA-256 hash of the prompt recorded at module load and on every call
-  - Anthropic API call with `claude-sonnet-4-20250514`, max_tokens 600
+  - Anthropic API call with `claude-sonnet-4-6`, max_tokens 600
   - Pre-flight regex check on user input (block obvious "interpret my result" requests)
   - Post-generation regex check on output against the violation patterns
   - Violations → block, replace with language-localised safe fallback, log to `ai_compliance_log` with `verdict='blocked'` and `violation_tags`

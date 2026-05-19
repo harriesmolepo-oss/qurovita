@@ -72,7 +72,7 @@ Post-generation: every AI response is scanned by a regex/keyword classifier. Any
 | Cache / queue | Redis + BullMQ |
 | File storage | AWS S3 (af-south-1) + KMS |
 | OCR | AWS Textract (af-south-1) — classification + metadata only |
-| AI | Anthropic API, model `claude-sonnet-4-20250514` |
+| AI | Anthropic API, model `claude-sonnet-4-6` |
 | WhatsApp | Twilio Messaging API + Redis state machine |
 | KYC | Smile ID (POPIA Operator agreement required) |
 | Mobile | React Native 0.74 + Expo 51, Android-first, min API 26 |

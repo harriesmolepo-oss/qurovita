@@ -253,7 +253,7 @@ export async function askAssistant(input: AssistantInput): Promise<AssistantResu
   try {
     const response = await getClient().messages.create(
       {
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-6",
         max_tokens: 600,
         temperature: 0,
         system: SYSTEM_PROMPT,
