@@ -1,0 +1,32 @@
+{
+  "name": "@qurovita/mobile",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nozbe/watermelondb": "^0.28.0",
+    "expo": "~54.0.33",
+    "expo-camera": "^55.0.18",
+    "expo-secure-store": "^55.0.14",
+    "expo-status-bar": "~3.0.9",
+    "i18next": "^26.2.0",
+    "react": "19.1.0",
+    "react-i18next": "^17.0.8",
+    "react-native": "0.81.5",
+    "react-native-ble-plx": "3.2.0",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-svg": "^15.15.5"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.29.0",
+    "@types/react": "~19.1.0",
+    "typescript": "~5.9.2"
+  },
+  "private": true
+}

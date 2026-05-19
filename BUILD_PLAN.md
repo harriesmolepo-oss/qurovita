@@ -108,7 +108,8 @@ Legend: `[ ]` not started · `[x]` done · `[~]` in progress · `[!]` blocked
 
 ## Phase 4 — Mobile (Expo / React Native)
 
-- [ ] **T4.1** Create `apps/mobile` with `pnpm dlx create-expo-app`. SDK 51, Android-first. Add `react-native-ble-plx@3.2`, `expo-secure-store`, `expo-camera`, `react-native-qrcode-svg`, `@nozbe/watermelondb`, `i18next`, `react-i18next`.
+- [x] **T4.1** Create `apps/mobile` with `pnpm dlx create-expo-app`. SDK 51, Android-first. Add `react-native-ble-plx@3.2`, `expo-secure-store`, `expo-camera`, `react-native-qrcode-svg`, `@nozbe/watermelondb`, `i18next`, `react-i18next`.
+  → Scaffolded with Expo SDK 54 (RN 0.81.5). New Architecture disabled (newArchEnabled: false) for BLE + WatermelonDB compatibility. babel.config.js with @babel/plugin-proposal-decorators (legacy). Android BLE/camera permissions + ble-plx expo plugin in app.json. slug/package: qurovita/co.qurovita.app. All workspace typechecks pass.
 
 - [ ] **T4.2** App scaffolding:
   - `app/_layout.tsx` — i18n provider, auth guard
