@@ -10,3 +10,6 @@ dist/
 coverage/
 *.csv
 .aws-credentials-DO-NOT-COMMIT/
+
+# TypeScript incremental build cache — never commit
+*.tsbuildinfo
