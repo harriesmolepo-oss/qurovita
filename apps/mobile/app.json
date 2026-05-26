@@ -2,6 +2,7 @@
   "expo": {
     "name": "QuroVita",
     "slug": "qurovita",
+    "owner": "harriesmolepo",
     "version": "1.0.0",
     "scheme": "qurovita",
     "orientation": "portrait",
@@ -21,7 +22,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "co.qurovita.app",
       "permissions": [
@@ -32,7 +32,12 @@
         "BLUETOOTH_ADVERTISE",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
-        "CAMERA"
+        "CAMERA",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -40,19 +45,24 @@
       "bundler": "metro"
     },
     "extra": {
-      "apiBaseUrl": "http://192.168.10.145:3000"
+      "apiBaseUrl": "http://192.168.10.145:3000",
+      "eas": {
+        "projectId": "2913a8fb-3caf-44f9-ba4c-6d32e948f229"
+      }
     },
     "plugins": [
-      [
-        "react-native-ble-plx",
-        {
-          "isBackgroundEnabled": false,
-          "modes": ["peripheral", "central"],
-          "bluetoothAlwaysPermission": "Allow QuroVita to connect to Bluetooth devices to share health records securely."
-        }
-      ],
       "expo-camera",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "packagingOptions": {
+              "pickFirst": ["**/libc++_shared.so"]
+            }
+          }
+        }
+      ]
     ]
   }
 }
