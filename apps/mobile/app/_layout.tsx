@@ -1,3 +1,4 @@
+import 'expo-crypto';
 import '../src/i18n'; // initialise i18next before any component renders
 import { useEffect } from 'react';
 import { Stack, useRouter, useSegments } from 'expo-router';
