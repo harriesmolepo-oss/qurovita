@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '../config/api';
+import { recordLocalConsent } from '../database/sync';
 import { useAuthContext } from './AuthContext';
 
 export function useAuth() {
@@ -49,6 +50,15 @@ export function useAuth() {
       throw new Error(typeof body.error === 'string' ? body.error : 'Failed to verify OTP');
     }
     const { token } = await res.json() as { token: string };
+
+    await recordLocalConsent({
+      consentType: 'privacy_policy',
+      version: consentVersion,
+      textSha256: consentHash,
+      granted: true,
+      language,
+    });
+
     // kyc_status not returned by the current backend — default to kyc_pending
     // so the user sees the KYC placeholder screen after first sign-up.
     await ctx.signIn(token, false);

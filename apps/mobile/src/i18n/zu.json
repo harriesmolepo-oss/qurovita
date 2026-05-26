@@ -15,15 +15,23 @@
     "otpSent": "Ikhodi ithunyelwe ku-{{phone}}. Ngesikhathi sokuthuthukisa, sebenzisa 000000.",
     "verify": "Qinisekisa",
     "back": "Emuva",
-    "invalidPhone": "Sicela ufake inombolo yocingo eválid yaseNingizimu Afrika (+27 noma 0 ulandele amanani ayisishiyagalolunye).",
+    "invalidPhone": "Sicela ufake inombolo yocingo evumelekile yaseNingizimu Afrika (+27 noma 0 elandelwa izinombolo eziyisishiyagalolunye).",
     "invalidOtp": "Sicela ufake ikhodi enamanani ayisithupha.",
-    "errorNetwork": "Iphutha lenethiwekhi. Sicela uhlole ukuxhumana kwakho bese uzame futhi.",
-    "errorUnknown": "Kukhona okungahambanga kahle. Sicela uzame futhi."
+    "errorNetwork": "Iphutha lenethiwekhi. Sicela uhlole ukuxhumana kwakho bese uzama futhi.",
+    "errorUnknown": "Kukhona okungahambanga kahle. Sicela uzame futhi.",
+    "errorOtpExpired": "Ikhodi yokuqinisekisa iphelelwe yisikhathi. Cela ikhodi entsha.",
+    "errorOtpInvalid": "Le khodi ayilungile. Sicela uzame futhi.",
+    "errorServer": "Iseva ayikwazanga ukuqedela ukungena. Zama futhi kamuva."
+  },
+  "consent": {
+    "version": "1.0",
+    "fullText": "QuroVita Amarekhodi Ezempilo — Isaziso Sobumfihlo (POPIA)\n\nNgokusebenzisa i-QuroVita uyavuma okulandelayo:\n\n1. Amarekhodi akho ezempilo agcinwa kumaseva aseNingizimu Afrika (i-AWS Cape Town, af-south-1). Ayikho idatha eya ngaphandle kweNingizimu Afrika.\n\n2. Wena ulawula ukuthi ubani obona amarekhodi akho. Ukwabelana kuhlala kuqala ngawe ngekhodi ye-QR oyidala. Ungakhansela ukufinyelela noma nini.\n\n3. I-QuroVita ayithengisi futhi ayabelani ngolwazi lwakho nezinkampani zangaphandle ngaphandle kwemvume yakho ecacile.\n\n4. I-QuroVita icubungula ulwazi lwakho lomuntu siqu ngokuhambelana noMthetho Wokuvikela Ulwazi Lwomuntu 4 ka-2013 (POPIA).\n\n5. Unelungelo lokufinyelela, ukulungisa, nokucela ukususwa kolwazi lwakho lomuntu siqu. Xhumana: privacy@qurovita.co.za\n\n6. Ngokuqhubeka uqinisekisa ukuthi ungumuntu ogulayo noma umguardian wakhe osemthethweni futhi wamukela le mithetho."
   },
   "kyc": {
     "title": "Ukuqinisekisa Ubunikazi",
     "body": "Ukuqinisekisa ubunikazi kuzotholakala maduze. Ungaqhubeka ukuhlola i-QuroVita phakathi nalesi sikhathi.",
-    "continue": "Qhubeka ku-QuroVita"
+    "continue": "Qhubeka ku-QuroVita",
+    "errorNetwork": "Ayikwazanga ukufinyelela insizakalo yokuqinisekisa. Hlola ukuxhumana kwakho."
   },
   "tabs": {
     "records": "Amarekhodi",
@@ -32,21 +40,57 @@
   },
   "home": {
     "title": "Amarekhodi Ami Ezempilo",
-    "noRecords": "Awekho amarekhodi ezempilo okwamanje. Amarekhodi ayabelanwe nawe yi-clinic azovela lapha."
+    "noRecords": "Awekho amarekhodi ezempilo okwamanje. Ngemva kokuvumelanisa kokuqala, amarekhodi avela ezibhedlela noma okulayishiwe azovela lapha.",
+    "syncError": "Ayikwazanga ukuvuselela amarekhodi. Usengabuka amakhophi agcinwe ungaxhunyiwe.",
+    "loading": "Ilayisha amarekhodi akho…"
   },
   "share": {
     "title": "Yabelana Ngamarekhodi",
-    "body": "Khetha amarekhodi ofuna ukuwabelana nawo, bese uchofa Yabelana ukuze udale ikhodi ye-QR ephephile ye-clinic.",
+    "subtitle": "Khetha amarekhodi ofuna ukuwabelana nawo nekliniki. Ikhodi ye-QR iqala kuphela iseshini evikelekile — ibhundu lakho eligcwele alifaki ngaphakathi kwe-QR.",
+    "body": "Khetha amarekhodi, bese udale ikhodi ye-QR evikelekile yekliniki ukuyiskena.",
     "selectAll": "Khetha konke",
-    "shareButton": "Yabelana ngamarekhodi akhethiwe"
+    "selectedCount": "Okukhethiwe {{count}}",
+    "noRecords": "Awekho amarekhodi okuyabelana ngawo. Vumelanisa ngemva kokungena usebenzisa i-Wi‑Fi noma idatha yeselula.",
+    "syncing": "Ivumelanisa amarekhodi amuva…",
+    "generateQr": "Dala i-QR",
+    "wifiDirectTitle": "Sebenzisa i-Wi‑Fi Direct amabhundu amakhulu",
+    "wifiDirectHint": "Okungakhethwa kumabhundu angaphezu kuka-50 KB. Kudinga imvume yendawo eyengeziwe ku-Android 12+. Uma ingatholakali, uhlelo lusebenzisa indlela evikelekile ye-inthanethi.",
+    "qrInstructions": "Cela unesi noma udokotela askene le QR ngaphakathi nesikhathi esibonisiwe.",
+    "sessionId": "I-ID yeseshini (ukufaka ngesandla)",
+    "transferStatus": "Ukudlulisa: {{phase}} nge-{{transport}}",
+    "revokeSession": "Khansela iseshini",
+    "revokedTitle": "Iseshini ikhanseliwe",
+    "revokedBody": "Lesi seshini sokwabelana asisasebenzi. Dala i-QR entsha uma usadinga ukwabelana.",
+    "dismiss": "Vala",
+    "errorTitle": "Ukwabelana kuhlulekile",
+    "errorUnknown": "Kukhona okungahambanga kahle ngesikhathi sokwabelana. Sicela uzame futhi.",
+    "errorCreateSession": "Ayikwazanga ukuqala iseshini yokwabelana. Hlola ukuxhumana kwakho bese uzama futhi.",
+    "errorSessionExpired": "Lesi seshini sokwabelana siphelelwe yisikhathi. Dala i-QR entsha ukuze uqhubeke.",
+    "errorRevokeFailed": "Ayikwazanga ukukhansela iseshini kuseva. Iseshini yakho yendawo isusiwe.",
+    "errorNoSelection": "Khetha okungenani irekhodi elilodwa ongabelana ngalo.",
+    "errorCrypto": "Ukusethwa kwenkinobho evikelekile kuhlulekile. Vala uhlelo bese uzama futhi.",
+    "errorTransferFailed": "Ikliniki ayikwazanga ukuthola ibhundu lakho. Zama futhi unenethiwekhi yeselula.",
+    "successTransferred": "Amarekhodi adluliselwe ngokuphepha."
   },
   "assistant": {
     "title": "Umsizi Wezempilo",
-    "placeholder": "Buza umbuzo wezempilo...",
+    "placeholder": "Buza umbuzo jikelele wezempilo…",
     "send": "Thumela",
-    "disclaimer": "Lo msizi uhlinzeka ngolwazi lwezempilo olujwayelekile kuphela. Ngeke akwazi ukuhumusha imiphumela yakho yezivivinyo noma akunike iseluleko sezokwelapha. Hlala uxhumana no-healthcare provider wakho.",
-    "blockedMessage": "Angikwazi ukuphendula lowo mbuzo othile mayelana nemiphumela yakho, kodwa ngingachaza imibono jikelele yezempilo noma ngikhombe imibuzo ozoyibuza udokotela wakho.",
+    "disclaimer": "Lo msizi unikeza ulwazi lwezempilo olujwayelekile kuphela. Akakwazi ukuhumusha imiphumela yakho yezivivinyo, ukuxilonga izimo, ukuncoma ukwelashwa, noma ukuhlaziya amadokhumenti owalayishile. Hlala uthintane nomhlinzeki wakho wezempilo ngezinqumo zokunakekelwa kwakho.",
+    "disclaimerShort": "Ulwazi olujwayelekile kuphela — akusilo iseluleko sezokwelapha.",
+    "blockedMessage": "Angikwazi ukuphendula imibuzo mayelana nemiphumela yakho noma ukwelashwa, kodwa ngingachaza imiqondo ejwayelekile yezempilo noma ngiphakamise imibuzo ongayibuza udokotela wakho.",
     "errorNetwork": "Iphutha lenethiwekhi. Sicela uhlole ukuxhumana kwakho.",
-    "errorUnknown": "Ayikwazanga ukuthola impendulo. Sicela uzame futhi."
+    "errorUnknown": "Ayikwazanga ukuthola impendulo. Sicela uzame futhi.",
+    "errorUnauthorized": "Sicela ungene futhi ukuze usebenzise umsizi.",
+    "errorRateLimit": "Imilayezo eminingi kakhulu. Linda kancane bese uzama futhi.",
+    "emptyState": "Buza ngomqondo wezokwelapha, ukuthi uhlobo lwezivivinyo lilinganisa njani ngokujwayelekile, noma imibuzo ongayibuza udokotela wakho."
+  },
+  "common": {
+    "loading": "Iyalayisha…",
+    "retry": "Zama futhi",
+    "cancel": "Khansela",
+    "ok": "KULUNGILE",
+    "offline": "Awuxhunyiwe ku-inthanethi. Ibonisa idatha egcinwe.",
+    "online": "Uxhunyiwe futhi ku-inthanethi."
   }
 }

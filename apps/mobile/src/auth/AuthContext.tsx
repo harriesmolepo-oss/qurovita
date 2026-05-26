@@ -47,17 +47,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     void (async () => {
-      const token = await SecureStore.getItemAsync(JWT_STORE_KEY);
-      if (!token || jwtIsExpired(token)) {
-        if (token) await SecureStore.deleteItemAsync(JWT_STORE_KEY);
+      try {
+        const token = await SecureStore.getItemAsync(JWT_STORE_KEY);
+        if (!token || jwtIsExpired(token)) {
+          if (token) await SecureStore.deleteItemAsync(JWT_STORE_KEY).catch(() => undefined);
+          setState({ status: 'unauthenticated', jwt: null, userId: null });
+          return;
+        }
+        const payload = decodeJwtPayload(token);
+        const userId = typeof payload?.sub === 'string' ? payload.sub : null;
+        // kyc_status is not encoded in the JWT — treating valid JWT as authenticated.
+        // T5.1 (Smile ID) will add a server-side check here.
+        setState({ status: 'authenticated', jwt: token, userId });
+      } catch {
+        // SecureStore unavailable (e.g. native module not yet initialised on first cold start)
         setState({ status: 'unauthenticated', jwt: null, userId: null });
-        return;
       }
-      const payload = decodeJwtPayload(token);
-      const userId = typeof payload?.sub === 'string' ? payload.sub : null;
-      // kyc_status is not encoded in the JWT — treating valid JWT as authenticated.
-      // T5.1 (Smile ID) will add a server-side check here.
-      setState({ status: 'authenticated', jwt: token, userId });
     })();
   }, []);
 

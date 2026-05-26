@@ -18,12 +18,20 @@
     "invalidPhone": "Ka kopo kenya nomoro ea mohala e nepahetseng ea Afrika Boroa (+27 kapa 0 e lateloa ke manomoro a robong).",
     "invalidOtp": "Ka kopo kenya khout ea manomoro a tsheletseng.",
     "errorNetwork": "Phoso ea marang-rang. Ka kopo hlahloba khokahano ea hau 'me leka hape.",
-    "errorUnknown": "Ho etsahetse ntho e sa nepahalang. Ka kopo leka hape."
+    "errorUnknown": "Ho etsahetse ntho e sa nepahalang. Ka kopo leka hape.",
+    "errorOtpExpired": "Khout ea netefatso e feletsoe ke nako. Kopa khout e ncha.",
+    "errorOtpInvalid": "Khout eo ha e nepahe. Ka kopo leka hape.",
+    "errorServer": "Seva e ke ke ea qeta ho kena. Leka hape hamorao."
+  },
+  "consent": {
+    "version": "1.0",
+    "fullText": "QuroVita Lirekoto tsa Bophelo — Tsebiso ea Lekunutu (POPIA)\n\nKa ho sebelisa QuroVita o lumela tse latelang:\n\n1. Lirekoto tsa hau tsa bophelo li bolokoa li-server tsa Afrika Boroa (AWS Cape Town, af-south-1). Ha ho data e tsamayang kantle ho Afrika Boroa.\n\n2. Uena u laola hore ke mang ea bonang lirekoto tsa hau. Ho arolelana ho qala ka wena ka khout ea QR eo u e hlahisang. U ka hlakola phihlello neng kapa neng.\n\n3. QuroVita ha e rekise kapa e arolelane tlhaiso-leseling ea hau le mekhatlo ea boraro ntle le tumello ea hau e hlakileng.\n\n4. QuroVita e sebetsana le tlhaiso-leseling ea hau ea botho ho latela Molao oa Tshireletso ya Taba ea Botho 4 wa 2013 (POPIA).\n\n5. U na le tokelo ya ho fihlella, ho lokisa, le ho kopa ho hlakoloa ha tlhaiso-leseling ea hau. Ikopanye le: privacy@qurovita.co.za\n\n6. Ka ho tsoela pele o netefatsa hore u morudi kapa molekane wa hae ea molao 'me o amohela litlhoko tsena."
   },
   "kyc": {
     "title": "Netefatso ea Botho",
     "body": "Netefatso ea botho e tla ba teng haufinyane. O ntse o ka hlahloba QuroVita nakong ena.",
-    "continue": "Tsoela pele ho QuroVita"
+    "continue": "Tsoela pele ho QuroVita",
+    "errorNetwork": "Ha e khone ho fihlella tšebeletso ea netefatso. Hlahloba khokahano ea hau."
   },
   "tabs": {
     "records": "Lirekoto",
@@ -32,21 +40,57 @@
   },
   "home": {
     "title": "Lirekoto Tsa Ka Tsa Bophelo",
-    "noRecords": "Ha ho lirekoto tsa bophelo joale. Lirekoto tse aroletsoeng le uena ke kliniki li tla hlaha mona."
+    "noRecords": "Ha ho lirekoto tsa bophelo hajoale. Kamora ho kopanela la pele, lirekoto tse tsoang ditsieng le tse kentsoeng li tla hlaha mona.",
+    "syncError": "Ha e khone ho nchafatsa lirekoto. O ntse o ka sheba likopi tse bolokiloeng ntle le inthanete.",
+    "loading": "E kenya lirekoto tsa hau…"
   },
   "share": {
     "title": "Arolelana Lirekoto",
-    "body": "Kgetha lirekoto tseo u batlang ho li arolelana, ebe u tobetsa Arolelana ho hlahisa khout ea QR e sirelelitsoeng bakeng sa kliniki.",
+    "subtitle": "Kgetha lirekoto tseo u batlang ho li arolelana le kliniki. Khout ea QR e qala feela seboka se sireletsehileng — bundle ea hau e felletseng ha e kenywe ka hare ho QR.",
+    "body": "Kgetha lirekoto, ebe u hlahisa khout ea QR e sireletsehileng bakeng sa kliniki ho e skena.",
     "selectAll": "Kgetha tsohle",
-    "shareButton": "Arolelana lirekoto tse khethiloeng"
+    "selectedCount": "{{count}} e khethiloeng",
+    "noRecords": "Ha ho lirekoto tseo u ka li arolelanang. Kopanya kamora ho kena u sebelisa Wi‑Fi kapa data ea mohala.",
+    "syncing": "E kopanya lirekoto tsa morao-rao…",
+    "generateQr": "Hlahisa QR",
+    "wifiDirectTitle": "Sebelisa Wi‑Fi Direct bakeng sa bundle e kholo",
+    "wifiDirectHint": "Boikhethelo bakeng sa bundle e ka holimo ho 50 KB. E hloka tumello e eketsehileng ea sebaka Android 12+. Haeba e le sieo, app e sebelisa mokhoa o sireletsehileng oa inthanete.",
+    "qrInstructions": "Kopa mohlodi kapa ngaka ho skena QR ena nakong e bontseng.",
+    "sessionId": "ID ea seboka (ho kenya ka letsoho)",
+    "transferStatus": "Phetiso: {{phase}} ka {{transport}}",
+    "revokeSession": "Hlakola seboka",
+    "revokedTitle": "Seboka se hlakotsoe",
+    "revokedBody": "Seboka sena sa ho arolelana ha se sa sebetsa. Hlahisa QR e ncha haeba u ntse u hloka ho arolelana.",
+    "dismiss": "Koala",
+    "errorTitle": "Ho arolelana ho hlolehile",
+    "errorUnknown": "Ho etsahetse phoso ha ho arolelanoa. Ka kopo leka hape.",
+    "errorCreateSession": "Ha e khone ho qala seboka sa ho arolelana. Hlahloba khokahano ea hau 'me leka hape.",
+    "errorSessionExpired": "Seboka sena sa ho arolelana se feletsoe ke nako. Hlahisa QR e ncha ho tsoela pele.",
+    "errorRevokeFailed": "Ha e khone ho hlakola seboka sebakeng sa seva. Seboka sa hau sa lehae se hlakotsoe.",
+    "errorNoSelection": "Kgetha bonyane rekoto e le 'ngoe eo u ka e arolelanang.",
+    "errorCrypto": "Ho theha senotlolo se sireletsehileng ho hlolehile. Koala app 'me leka hape.",
+    "errorTransferFailed": "Kliniki e ke ke ea amohela bundle ea hau. Leka hape u sebelisa data ea mohala.",
+    "successTransferred": "Lirekoto li fetisitsoe ka tsela e sireletsehileng."
   },
   "assistant": {
     "title": "Motlatsi oa Bophelo",
-    "placeholder": "Botsa potso ea bophelo...",
+    "placeholder": "Botsa potso e akaretsang ea bophelo…",
     "send": "Romela",
-    "disclaimer": "Motlatsi ena o fana ka tlhaiso-leseling ea kakaretso ea bophelo feela. Ha a kake a hlalosa liphello tsa hau tsa liteko kapa a u fa keletso ea bongaka. Lula u buisana le mofani oa tlhokomelo ea bophelo oa hau.",
-    "blockedMessage": "Ha ke kake ka araba potso eo e itseng mabapi le liphello tsa hau, empa nka hlalosa maikutlo a kakaretso a bophelo kapa ke supise lipotso tseo u ka li botsa ngaka ea hau.",
+    "disclaimer": "Motlatsi enoa o fana ka tlhaiso-leseling e akaretsang ea bophelo feela. Ha a khone ho hlalosa liphetho tsa hau tsa liteko, ho fana ka maikutlo a bolwetsi, ho khothaletsa phekolo, kapa ho hlahloba litokomane tseo u li kenteng. Lula u buisana le mofani oa hau oa tlhokomelo ea bophelo ka liqeto tsa hau.",
+    "disclaimerShort": "Tlhaiso-leseling e akaretsang feela — ha se keletso ea bongaka.",
+    "blockedMessage": "Ha ke khone ho araba lipotso mabapi le liphetho tsa hau kapa phekolo, empa nka hlalosa maikutlo a kakaretso a bophelo kapa ke supise lipotso tseo u ka li botsa ngaka ea hau.",
     "errorNetwork": "Phoso ea marang-rang. Ka kopo hlahloba khokahano ea hau.",
-    "errorUnknown": "Ha e kaka ea fumana karabo. Ka kopo leka hape."
+    "errorUnknown": "Ha e khone ho fumana karabo. Ka kopo leka hape.",
+    "errorUnauthorized": "Ka kopo kena hape ho sebelisa motlatsi.",
+    "errorRateLimit": "Melaetsa e mengata haholo. Emisa hanyane 'me leka hape.",
+    "emptyState": "Botsa ka lentsoe la bongaka, hore na mofuta oa teko o lekanya eng ka kakaretso, kapa lipotso tseo u ka li botsang ngaka ea hau."
+  },
+  "common": {
+    "loading": "E a kenya…",
+    "retry": "Leka hape",
+    "cancel": "Hlakola",
+    "ok": "OK",
+    "offline": "Ha u inthaneteng. E bontša data e bolokiloeng.",
+    "online": "U se u inthaneteng hape."
   }
 }

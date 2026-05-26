@@ -16,11 +16,8 @@ import {
   SUPPORTED_LANGUAGES,
   type SupportedLanguage,
 } from '../../src/i18n';
-import {
-  POPIA_CONSENT_TEXT,
-  POPIA_CONSENT_SHA256,
-  POPIA_CONSENT_VERSION,
-} from '../../src/popia/consentText';
+import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex } from '@noble/hashes/utils';
 
 type Step = 'language' | 'consent' | 'otp';
 
@@ -34,7 +31,7 @@ const LANGUAGE_LABELS: Record<SupportedLanguage, string> = {
 const SA_PHONE_RE = /^(\+27|0)[6-8][0-9]{8}$/;
 
 export default function SignUpScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { requestOtp, verifyOtp } = useAuth();
 
   const [step, setStep] = useState<Step>('language');
@@ -84,12 +81,14 @@ export default function SignUpScreen() {
     }
     setLoading(true);
     try {
+      const consentText = t('consent.fullText');
+      const consentHash = bytesToHex(sha256(new TextEncoder().encode(consentText)));
       await verifyOtp(
         phone.trim(),
         otp.trim(),
-        POPIA_CONSENT_SHA256,
-        POPIA_CONSENT_VERSION,
-        language,
+        consentHash,
+        t('consent.version'),
+        i18n.language,
       );
       // Navigation is handled by the AuthGuard in _layout.tsx
     } catch (e) {
@@ -123,7 +122,7 @@ export default function SignUpScreen() {
       <View style={styles.container}>
         <Text style={styles.heading}>{t('auth.privacyTitle')}</Text>
         <ScrollView style={styles.consentScroll}>
-          <Text style={styles.consentText}>{POPIA_CONSENT_TEXT}</Text>
+          <Text style={styles.consentText}>{t('consent.fullText')}</Text>
         </ScrollView>
         <TouchableOpacity
           style={styles.checkRow}

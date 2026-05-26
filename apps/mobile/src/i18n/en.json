@@ -18,12 +18,20 @@
     "invalidPhone": "Please enter a valid South African mobile number (+27 or 0 followed by 9 digits).",
     "invalidOtp": "Please enter the 6-digit code.",
     "errorNetwork": "Network error. Please check your connection and try again.",
-    "errorUnknown": "Something went wrong. Please try again."
+    "errorUnknown": "Something went wrong. Please try again.",
+    "errorOtpExpired": "The verification code has expired. Request a new code.",
+    "errorOtpInvalid": "That code is incorrect. Please try again.",
+    "errorServer": "The server could not complete sign-in. Try again later."
+  },
+  "consent": {
+    "version": "1.0",
+    "fullText": "QuroVita Health Records — Privacy Notice (POPIA)\n\nBy using QuroVita you agree to the following:\n\n1. Your health records are stored on servers in South Africa (AWS Cape Town, af-south-1). No data leaves South Africa.\n\n2. You control who sees your records. Sharing is always initiated by you via a QR code you generate. You can revoke access at any time.\n\n3. QuroVita does not sell or share your information with third parties without your explicit consent.\n\n4. QuroVita processes your personal information in compliance with the Protection of Personal Information Act 4 of 2013 (POPIA).\n\n5. You have the right to access, correct, and request deletion of your personal information. Contact: privacy@qurovita.co.za\n\n6. By proceeding you confirm that you are the patient or their legal guardian and that you accept these terms."
   },
   "kyc": {
     "title": "Identity Verification",
     "body": "Identity verification will be available soon. You can still explore QuroVita in the meantime.",
-    "continue": "Continue to QuroVita"
+    "continue": "Continue to QuroVita",
+    "errorNetwork": "Could not reach the verification service. Check your connection."
   },
   "tabs": {
     "records": "Records",
@@ -32,21 +40,57 @@
   },
   "home": {
     "title": "My Health Records",
-    "noRecords": "No health records yet. Records shared with you by a clinic will appear here."
+    "noRecords": "No health records yet. After your first sync, records from clinics and uploads will appear here.",
+    "syncError": "Could not refresh records. You can still view saved copies offline.",
+    "loading": "Loading your records…"
   },
   "share": {
     "title": "Share Records",
-    "body": "Select the records you want to share, then tap Share to generate a secure QR code for the clinic.",
+    "subtitle": "Select the records you want to share with a clinic. The QR code only starts a secure session — your full bundle is never embedded in the QR.",
+    "body": "Select records, then generate a secure QR code for the clinic to scan.",
     "selectAll": "Select all",
-    "shareButton": "Share selected records"
+    "selectedCount": "{{count}} selected",
+    "noRecords": "No records available to share. Pull to refresh after signing in on Wi‑Fi or mobile data.",
+    "syncing": "Syncing latest records…",
+    "generateQr": "Generate QR",
+    "wifiDirectTitle": "Use Wi‑Fi Direct for large bundles",
+    "wifiDirectHint": "Optional for bundles over 50 KB. Requires extra location permission on Android 12+. If unavailable, the app uses encrypted online fallback.",
+    "qrInstructions": "Ask the nurse or doctor to scan this QR within the time shown.",
+    "sessionId": "Session ID (manual entry fallback)",
+    "transferStatus": "Transfer: {{phase}} via {{transport}}",
+    "revokeSession": "Revoke session",
+    "revokedTitle": "Session revoked",
+    "revokedBody": "This share session is no longer active. Generate a new QR if you still need to share records.",
+    "dismiss": "Close",
+    "errorTitle": "Share failed",
+    "errorUnknown": "Something went wrong while sharing. Please try again.",
+    "errorCreateSession": "Could not start a share session. Check your connection and try again.",
+    "errorSessionExpired": "This share session has expired. Generate a new QR to continue.",
+    "errorRevokeFailed": "Could not revoke the session on the server. Your local session has been cleared.",
+    "errorNoSelection": "Select at least one record to share.",
+    "errorCrypto": "Secure key setup failed. Close the app and try again.",
+    "errorTransferFailed": "The clinic could not receive your bundle. Try again with mobile data enabled.",
+    "successTransferred": "Records transferred securely."
   },
   "assistant": {
     "title": "Health Assistant",
-    "placeholder": "Ask a health question...",
+    "placeholder": "Ask a general health question…",
     "send": "Send",
-    "disclaimer": "This assistant provides general health information only. It cannot interpret your test results or provide medical advice. Always consult your healthcare provider.",
-    "blockedMessage": "I can't answer that specific question about your results, but I can explain general health concepts or suggest questions to ask your doctor.",
+    "disclaimer": "This assistant provides general health information only. It cannot interpret your test results, diagnose conditions, recommend treatment, or analyse your uploaded documents. Always consult your healthcare provider for decisions about your care.",
+    "disclaimerShort": "General information only — not medical advice.",
+    "blockedMessage": "I cannot answer questions about your personal results or treatment, but I can explain general health concepts or suggest questions to ask your doctor.",
     "errorNetwork": "Network error. Please check your connection.",
-    "errorUnknown": "Could not get a response. Please try again."
+    "errorUnknown": "Could not get a response. Please try again.",
+    "errorUnauthorized": "Please sign in again to use the assistant.",
+    "errorRateLimit": "Too many messages. Wait a moment and try again.",
+    "emptyState": "Ask about a medical term, what a type of test measures in general, or questions you could ask your clinician."
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "offline": "You are offline. Showing saved data.",
+    "online": "Back online."
   }
 }
