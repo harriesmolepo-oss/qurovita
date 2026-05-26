@@ -38,4 +38,11 @@ yarn-error.*
 
 # generated native folders
 /ios
-/android
+# ---------------------------------------------------------------
+# android/ and ios/ committed as source of truth (bare workflow).
+# We do not run `expo prebuild` — native folders are hand-edited.
+# To re-adopt Continuous Native Generation later, uncomment below,
+# delete the folders, run `expo prebuild`, and re-commit nothing
+# under android/ or ios/.
+# ---------------------------------------------------------------
+# /android

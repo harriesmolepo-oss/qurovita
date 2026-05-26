@@ -1,0 +1,24 @@
+# OSX
+#
+.DS_Store
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+
+# Bundle artifacts
+*.jsbundle
+
+# Never commit release signing keys. Debug keystore is OK
+# (committed for reproducible debug builds), release keystore is NOT.
+release.keystore
+*release*.jks
+*release*.keystore
+keystore.properties
+signing.properties
