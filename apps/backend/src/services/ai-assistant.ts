@@ -228,6 +228,12 @@ async function writeComplianceLog(params: {
 export async function askAssistant(input: AssistantInput): Promise<AssistantResult> {
   const { userId, message, language } = input;
 
+  // ── No-key stub ──────────────────────────────────────────────────────────────
+  if (!process.env.ANTHROPIC_API_KEY) {
+    logger.warn({ userId }, "assistant: ANTHROPIC_API_KEY not set — returning stub");
+    return { verdict: "allowed", text: "[AI assistant stub — set ANTHROPIC_API_KEY to enable]", violations: [] };
+  }
+
   // ── Pre-flight check ────────────────────────────────────────────────────────
   // Block obvious clinical-interpretation requests before touching the API.
   // Still mandatory to log — audit chain must have no gaps.
