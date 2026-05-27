@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Network Security Configuration
+
+  Production traffic is HTTPS-only by Android default policy. Cleartext HTTP
+  is permitted ONLY for explicitly listed development hosts. Add new dev IPs
+  here as needed; do NOT introduce a base-config that allows cleartext
+  globally (regression to usesCleartextTraffic=true).
+
+  POPIA Section 19 compliance: production endpoints (api.qurovita.co.za,
+  etc.) remain TLS-enforced.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Local dev backend -->
+        <domain includeSubdomains="false">192.168.10.145</domain>
+        <!-- Android emulator host loopback (covers adb reverse + emulator) -->
+        <domain includeSubdomains="false">10.0.2.2</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>
