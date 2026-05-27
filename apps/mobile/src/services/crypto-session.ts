@@ -40,7 +40,8 @@ function pkcs8ToPrivate32(pkcs8: ArrayBuffer): Uint8Array {
   if (bytes.length < 32) {
     throw new Error('Invalid PKCS#8 private key export');
   }
-  return p256.utils.normPrivateKeyToScalar(bytes.slice(-32));
+  const scalar = p256.utils.normPrivateKeyToScalar(bytes.slice(-32));
+  return unhex(scalar.toString(16).padStart(64, '0'));
 }
 
 export interface PatientEcdhKeyMaterial {

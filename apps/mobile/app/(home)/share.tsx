@@ -326,7 +326,7 @@ export default function ShareRecordsScreen() {
           (selectedIds.size === 0 || screenState === 'loading') && styles.buttonDisabled,
         ]}
         onPress={() => void handleGenerateQr()}
-        disabled={selectedIds.size === 0 || screenState === 'loading' || showQr}
+        disabled={selectedIds.size === 0 || screenState === 'loading' || !!showQr}
       >
         {screenState === 'loading' ? (
           <ActivityIndicator color="#fff" />

@@ -181,7 +181,7 @@ async function pullFhirResources(
             });
           } else {
             await collection.create((row) => {
-              row.fhirId = resource.id;
+              row.fhirId = resource.id!;
               row.resourceType = resource.resourceType;
               row.dataJson = payload;
               row.serverUpdatedAt = serverUpdatedAt;
