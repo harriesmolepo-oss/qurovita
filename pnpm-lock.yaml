@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  hermes-compiler: 0.15.1
-
 importers:
 
   .:
@@ -169,8 +166,8 @@ importers:
         specifier: ^55.0.18
         version: 55.0.18(expo@55.0.26)(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0))
       hermes-compiler:
-        specifier: 0.15.1
-        version: 0.15.1
+        specifier: ^250829098.0.2
+        version: 250829098.0.2
       i18next:
         specifier: ^26.2.0
         version: 26.2.0(typescript@5.9.3)
@@ -3905,8 +3902,8 @@ packages:
     resolution: {integrity: sha512-ej4AhfhfL2Q2zpMmLo7U1Uv9+PyhIZpgQLGT1F9miIGmiCJIoCgSmczFdrc97mWT4kVY72KA+WnnhJ5pghSvSg==}
     engines: {node: '>= 0.4'}
 
-  hermes-compiler@0.15.1:
-    resolution: {integrity: sha512-qSvkZKp+xVNmpR+x7ZhmfHeSFLxU2Mt8/+L5owajfD8T7QqUuJfdoQmxuAAo4Xduic/3waMX0kUX7FRo4q+CAA==}
+  hermes-compiler@250829098.0.2:
+    resolution: {integrity: sha512-9+la7TeGGZg5Cj0UV5MbqhqyT/Hd/PUlQZ3Uhggy0jiaiG2qxFJbi/uGWALTqa7GwETyQa4A7ngus1A1aXA8QQ==}
 
   hermes-estree@0.29.1:
     resolution: {integrity: sha512-jl+x31n4/w+wEqm0I2r4CMimukLbLQEYpisys5oCre611CI5fc9TxhqkBBCJ1edDG4Kza0f7CgNz8xVMLZQOmQ==}
@@ -9996,7 +9993,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hermes-compiler@0.15.1: {}
+  hermes-compiler@250829098.0.2: {}
 
   hermes-estree@0.29.1: {}
 
