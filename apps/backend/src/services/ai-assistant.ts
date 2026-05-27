@@ -229,7 +229,7 @@ export async function askAssistant(input: AssistantInput): Promise<AssistantResu
   const { userId, message, language } = input;
 
   // ── No-key stub ──────────────────────────────────────────────────────────────
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.ANTHROPIC_API_KEY && process.env.NODE_ENV !== "test") {
     logger.warn({ userId }, "assistant: ANTHROPIC_API_KEY not set — returning stub");
     return { verdict: "allowed", text: "[AI assistant stub — set ANTHROPIC_API_KEY to enable]", violations: [] };
   }
