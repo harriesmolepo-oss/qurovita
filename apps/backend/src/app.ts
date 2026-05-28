@@ -16,6 +16,13 @@ import { fhirRoutes } from "./routes/fhir.js";
 import { documentsRoute } from "./routes/documents.js";
 import { assistantRoute } from "./routes/assistant.js";
 import { sampleBundle, seedSampleData } from "./services/sample-fhir.js";
+import { getSigningState, type SigningState } from "./kms.js";
+
+declare module "fastify" {
+  interface FastifyInstance {
+    kms: SigningState;
+  }
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -76,6 +83,9 @@ export async function buildApp(opts: AppOptions = {}): Promise<FastifyInstance> 
       return reply.code(401).send({ error: "Unauthorized" });
     }
   });
+
+  const kms = await getSigningState(app.log);
+  app.decorate("kms", kms);
 
   await app.register(qrRoutes);
   await app.register(wsRoutes);

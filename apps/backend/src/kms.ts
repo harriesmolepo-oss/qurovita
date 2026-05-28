@@ -37,20 +37,23 @@ export interface SigningState {
 let _state: SigningState | null = null;
 
 /** Returns the signing state, initialising it once on first call. */
-export async function getSigningState(): Promise<SigningState> {
+export async function getSigningState(
+  logger: { warn(msg: string): void } = console,
+): Promise<SigningState> {
   if (_state) return _state;
   _state =
     process.env.NODE_ENV === "production"
       ? await initFromKMS()
-      : initFromFile();
+      : initFromFile(logger);
   return _state;
 }
 
 // ---------------------------------------------------------------------------
 // Dev path — .keys/ file cache
 // ---------------------------------------------------------------------------
-function initFromFile(): SigningState {
+function initFromFile(logger: { warn(msg: string): void }): SigningState {
   const key = loadOrCreateSigningKey();
+  logger.warn("kms: loading plaintext dev signing key from disk — use KMS in production");
   // Derive a 32-byte AES wrapping key from the ECDSA private key.
   // The distinct info string domain-separates this from the signing key itself.
   const wrapKey = hkdf(
