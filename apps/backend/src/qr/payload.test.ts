@@ -3,12 +3,12 @@ import { encode } from "cbor-x";
 import { encodePayload, decodePayload, type QrPayload } from "./payload.js";
 import { randomBytes } from "node:crypto";
 
-// Realistic sample: random 16-byte sid, valid uncompressed P-256 spk prefix,
+// Realistic sample: random 16-byte sid, valid compressed P-256 spk,
 // exp = now + 5 min in unix seconds.
 function makeSample(overrides?: Partial<QrPayload>): QrPayload {
-  const spk = Buffer.alloc(65);
-  spk[0] = 0x04;
-  randomBytes(64).copy(spk, 1);
+  const spk = Buffer.alloc(33);
+  spk[0] = 0x02;
+  randomBytes(32).copy(spk, 1);
   return {
     v: 1,
     sid: randomBytes(16),
@@ -85,26 +85,26 @@ describe("CBOR QR payload codec", () => {
     expect(() => decodePayload(wrongV)).toThrow(/version/i);
   });
 
-  it("rejects spk of wrong length (64 bytes)", () => {
-    const badSpk = Buffer.alloc(64, 0x04);
+  it("rejects spk of wrong length (65 bytes — uncompressed length)", () => {
+    const badSpk = Buffer.alloc(65, 0x02);
     const encoded = rawEncode({
       v: 1,
       sid: randomBytes(16),
       spk: badSpk,
       exp: Math.floor(Date.now() / 1000) + 300,
     });
-    expect(() => decodePayload(encoded)).toThrow(/65 bytes/i);
+    expect(() => decodePayload(encoded)).toThrow(/33 bytes/i);
   });
 
-  it("rejects spk with non-uncompressed prefix (0x03)", () => {
-    const compressedSpk = Buffer.alloc(65, 0x00);
-    compressedSpk[0] = 0x03;
+  it("rejects spk with uncompressed prefix (0x04)", () => {
+    const badPrefixSpk = Buffer.alloc(33, 0x00);
+    badPrefixSpk[0] = 0x04;
     const encoded = rawEncode({
       v: 1,
       sid: randomBytes(16),
-      spk: compressedSpk,
+      spk: badPrefixSpk,
       exp: Math.floor(Date.now() / 1000) + 300,
     });
-    expect(() => decodePayload(encoded)).toThrow(/0x04/i);
+    expect(() => decodePayload(encoded)).toThrow(/0x02 or 0x03/i);
   });
 });

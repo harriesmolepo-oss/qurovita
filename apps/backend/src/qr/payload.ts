@@ -14,7 +14,7 @@ const encoder = new Encoder({ useRecords: false });
 export type QrPayload = {
   v: 1;
   sid: Buffer; // 16 raw bytes — UUID binary (no dashes)
-  spk: Buffer; // 65 raw bytes — uncompressed P-256 public key (0x04 || X || Y)
+  spk: Buffer; // 33 raw bytes — compressed P-256 public key (0x02 or 0x03 prefix)
   exp: number; // Unix epoch seconds (not milliseconds)
   ble?: string;
   wfd?: string;
@@ -46,12 +46,12 @@ export function decodePayload(b: Buffer): QrPayload {
   }
 
   const spk = toBuffer(raw.spk);
-  if (spk.length !== 65) {
-    throw new Error(`spk must be 65 bytes, got ${spk.length}`);
+  if (spk.length !== 33) {
+    throw new Error(`spk must be 33 bytes, got ${spk.length}`);
   }
-  if (spk[0] !== 0x04) {
+  if (spk[0] !== 0x02 && spk[0] !== 0x03) {
     throw new Error(
-      `spk must be uncompressed P-256 (0x04 prefix), got 0x${spk[0].toString(16).padStart(2, "0")}`,
+      `spk must be compressed P-256 (0x02 or 0x03 prefix), got 0x${spk[0].toString(16).padStart(2, "0")}`,
     );
   }
 
