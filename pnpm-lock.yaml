@@ -117,6 +117,9 @@ importers:
       vitest:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@20.19.41)(lightningcss@1.32.0)(terser@5.48.0)
+      ws:
+        specifier: ^8.21.0
+        version: 8.21.0
 
   apps/mobile:
     dependencies:

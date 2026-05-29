@@ -68,7 +68,7 @@ export default function SessionPage() {
       log("Provider derived AES-256 session key via ECDH + HKDF-SHA256");
 
       // 3. Open WebSocket and signal ready
-      const wsUrl = meta.websocket_url ?? `ws://localhost:3000/ws/${sessionId}?role=provider`;
+      const wsUrl = meta.websocket_url ?? `ws://localhost:3000/shared/ws/${sessionId}?role=provider`;
       const ws = new WebSocket(wsUrl);
       ws.binaryType = "arraybuffer";
 
