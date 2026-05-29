@@ -1,0 +1,3 @@
+# WS Route Breakage — Action Required Before ws.ts Goes Live
+
+`apps/backend/src/routes/ws.ts` was written against the pre-0007 `qr_sessions` schema and references columns that no longer exist: `status` (replaced by the `revoked_at`/`claimed_at` timestamp pair), `consumed_at` (dropped entirely), and `server_ecdh_privkey` (renamed to `server_privkey`). Any runtime path that exercises `ws.ts` — session lookup, key unwrap, or status transition — will throw a PostgreSQL `undefined_column` error until the file is rewritten to query `revoked_at IS NOT NULL`, `claimed_at IS NOT NULL`, and `server_privkey` in place of the old column names, following the same timestamp-column model used by the handlers added in migration 0007 and the `qr.ts` rewrite committed in `30f4087`.
